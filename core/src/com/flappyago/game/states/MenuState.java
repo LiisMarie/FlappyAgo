@@ -11,38 +11,59 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.flappyago.game.FlappyAgo;
 
 public class MenuState extends State {
+    // background
     private Texture backgroundTexture;
-    private Texture playTexture;
 
-    private Drawable drawableBackground;
+    // play button
+    private Texture playTexture;
     private Drawable drawablePlay;
     private ImageButton playButton;
 
+    // sound button
+    private Texture soundTexture;
+    private Drawable drawableSound;
+    private ImageButton soundButton;
+
+    // viewport
+    private Viewport viewport;
+
+    // stage
     private Stage stage;
 
     public MenuState(GameStateManager gameStateManager) {
         super(gameStateManager);
+
         camera.setToOrtho(false, FlappyAgo.WIDTH / 2,
                 FlappyAgo.HEIGHT / 2);
+        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
 
-        stage = new Stage(new ScreenViewport());
+        viewport = new StretchViewport(FlappyAgo.WIDTH, FlappyAgo.HEIGHT, camera);
+        stage = new Stage(viewport);
 
-        backgroundTexture = new Texture("background.png");
-        drawableBackground = new TextureRegionDrawable((new TextureRegion(backgroundTexture)));
+
+        // set background for menu
+        backgroundTexture = new Texture("menu_background.png");
         Image bg = new Image(backgroundTexture);
-        bg.setPosition(0, 0);
+        bg.setPosition(0, 0);  // bg location: left-hand bottom corner
+        bg.setSize(FlappyAgo.WIDTH, FlappyAgo.HEIGHT);  // set background image size
         stage.addActor(bg);
 
-        playTexture = new Texture("playbutton.png");
+        changeSoundButton("ON");
+
+        // set play button
+        playTexture = new Texture("play_button.png");
         drawablePlay = new TextureRegionDrawable(new TextureRegion(playTexture));
         playButton = new ImageButton(drawablePlay);
-
-
+        playButton.setPosition(camera.position.x - playButton.getWidth() / 2, camera.position.y);
         stage.addActor(playButton);
+
+
+        stage.getViewport().apply();
         Gdx.input.setInputProcessor(stage);
 
         playButton.addListener(new EventListener() {
@@ -52,13 +73,56 @@ public class MenuState extends State {
             }
         });
 
+        soundButton.addListener(new EventListener() {
+            @Override
+            public boolean handle(Event event) {
+                return Gdx.input.justTouched();
+            }
+        });
+
+    }
+
+    private void changeSoundButton(String str) {
+        if (str.equals("ON")) {
+            soundTexture = new Texture("sound_button.png");
+        } else {
+            soundTexture = new Texture("off_sound_button.png");
+        }
+        drawableSound = new TextureRegionDrawable(new TextureRegion(soundTexture));
+        soundButton = new ImageButton(drawableSound);
+        soundButton.setSize(40, 50);
+        soundButton.setPosition(FlappyAgo.WIDTH - soundButton.getWidth() - 30,
+                FlappyAgo.HEIGHT - soundButton.getHeight() - 30);
+        stage.addActor(soundButton);
+    }
+
+    public void resize(int width, int height) {
+        stage.getViewport().update(width, height);
+        stage.getCamera().viewportWidth = FlappyAgo.WIDTH;
+        stage.getCamera().viewportHeight = FlappyAgo.WIDTH * height / width;
+        stage.getCamera().position.set(stage.getCamera().viewportWidth / 2, stage.getCamera().viewportHeight / 2, 0);
+        stage.getCamera().update();
     }
 
     @Override
     public void handleInput() {
         // when user has touched the screen (with mouse or button)
-        if (Gdx.input.justTouched() && playButton.isPressed()) {
+        if (playButton.isPressed()) {  // && Gdx.input.justTouched()
             gameStateManager.set(new PlayState(gameStateManager));
+
+        } else if (soundButton.isPressed() &&  // && Gdx.input.justTouched()
+                ((FlappyAgo)Gdx.app.getApplicationListener()).music.getVolume() != 0) {
+            soundButton.remove();
+            changeSoundButton("OFF");
+            ((FlappyAgo)Gdx.app.getApplicationListener()).setMasterVolume(0);
+            // sets the volume of the music to 0
+
+        } else if (soundButton.isPressed() &&  // // && Gdx.input.justTouched()
+                ((FlappyAgo)Gdx.app.getApplicationListener()).music.getVolume() == 0) {
+            soundButton.remove();
+            changeSoundButton("ON");
+            ((FlappyAgo) Gdx.app.getApplicationListener()).setMasterVolume(0.5f);
+            // sets the volume back high
         }
     }
 
@@ -70,22 +134,23 @@ public class MenuState extends State {
     @Override
     public void render(SpriteBatch sb) {
         sb.setProjectionMatrix(camera.combined);
-        // sb.begin();
-        // sb.draw(background, 0,0);
-        // sb.draw(background, 0,0, FlappyAgo.WIDTH, FlappyAgo.HEIGHT);
-        // 0, 0 bottom left hand corner
 
-        //sb.draw(backgroundTexture, 0, 0, FlappyAgo.WIDTH, FlappyAgo.HEIGHT);
-        stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
-        stage.draw(); //Draw the ui
+        stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
+        stage.getCamera().update();
 
-        // sb.end();
+        stage.getBatch().begin();
+
+        // stage.getBatch().draw(backgroundTexture, 0, 0);
+        // stage.getBatch().draw(titleTexture, 0, 0);
+        stage.getBatch().end();
+
+        stage.act(Gdx.graphics.getDeltaTime());
+        stage.draw();
     }
 
     @Override
     public void dispose() {
-        backgroundTexture.dispose();
-        // playButton.dispose();
+        stage.dispose();
         System.out.println("Menu state disposed");
     }
 }

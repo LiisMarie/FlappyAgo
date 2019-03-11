@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.flappyago.game.FlappyAgo;
 
 public class Ago {
     private static final int GRAVITY = -15;
@@ -25,7 +26,7 @@ public class Ago {
         position = new Vector3(x, y, 0);  // Ago's starting point
         velocity = new Vector3(0, 0, 0);  // before starting speed is 0
 
-        texture = new Texture("agoanimation.png");
+        texture = new Texture("ago_animation.png");
         agoAnimation = new Animation(new TextureRegion(texture), 3, 0.5f);
 
         bounds = new Rectangle(x, y, texture.getWidth() / 3, texture.getHeight());
@@ -53,7 +54,7 @@ public class Ago {
 
     public void jump() {
         velocity.y = 250;
-        fly.play(0.5f);
+        fly.play(FlappyAgo.masterVolume);
     }
 
     public void dispose() {

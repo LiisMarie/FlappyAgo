@@ -91,6 +91,8 @@ public class PlayState extends State {
         if ((Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) && !gameOver) {
             gameOn = true;
             ago.jump();
+        } else if ((Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) && gameOver) {
+            gameStateManager.push(new PlayState(gameStateManager));
         }
     }
 
@@ -161,11 +163,11 @@ public class PlayState extends State {
         sb.draw(ground, groundPosition2.x, groundPosition2.y);
 
         // TODO draw sound button nd make it work
-        // sb.draw(soundTexture, camera.position.x - (camera.viewportWidth / 2) - 100, camera.position.y);
+        // sb.draw(soundTexture, camera.position.x - (camera.viewportWidth / 2)  - 100, camera.position.y);
 
         if (gameOver) {
             // gameOver text
-            sb.draw(bgGameOver, camera.position.x - 100, camera.position.y - 40);
+            sb.draw(bgGameOver, camera.position.x - 105, camera.position.y - 30);
             font.getData().setScale(0.5f, 0.5f);
             font.setColor(Color.BLACK);
             font.draw(sb, "GameOver", camera.position.x - 90, camera.position.y + 130);

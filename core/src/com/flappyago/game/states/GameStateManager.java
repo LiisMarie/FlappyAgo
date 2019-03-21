@@ -44,7 +44,7 @@ public class GameStateManager {
     }
 
     /**
-     * Render everything to the sreen.
+     * Render everything to the screen.
      * @param sb container containing everything which renders to the screen.
      */
     public void render(SpriteBatch sb) {

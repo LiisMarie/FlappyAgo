@@ -29,9 +29,11 @@ public class GameOverState extends State {
 
     @Override
     public void render(SpriteBatch sb) {
+        /*
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
         sb.end();
+        */
     }
 
     @Override

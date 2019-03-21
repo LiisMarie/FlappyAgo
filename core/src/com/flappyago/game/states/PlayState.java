@@ -3,10 +3,22 @@ package com.flappyago.game.states;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.flappyago.game.FlappyAgo;
 import com.flappyago.game.sprites.Ago;
 import com.flappyago.game.sprites.Tube;
@@ -30,10 +42,22 @@ public class PlayState extends State {
     private Texture ground;
     private Vector2 groundPosition1, groundPosition2;
 
+    // game over background
+    private Texture bgGameOver;
+
     private Sound die;
+
+
+    private boolean gameOn;
+    private boolean gameOver;
+
+    BitmapFont font;
 
     public PlayState(GameStateManager gameStateManager) {
         super(gameStateManager);
+
+        gameOn = false;
+        gameOver = false;
 
         ago = new Ago(50, 100);
 
@@ -41,6 +65,8 @@ public class PlayState extends State {
                 FlappyAgo.HEIGHT / 2);
 
         background = new Texture("background.png");
+
+        bgGameOver = new Texture("game_over_background.png");
 
         // ground
         ground = new Texture("ground.png");
@@ -56,52 +82,53 @@ public class PlayState extends State {
         }
 
         die = Gdx.audio.newSound(Gdx.files.internal("dying.ogg"));
+
+        font = new BitmapFont(Gdx.files.internal("flappybirdy.fnt"));
     }
 
     @Override
     protected void handleInput() {
-        if (Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+        if ((Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) && !gameOver) {
+            gameOn = true;
             ago.jump();
+        } else if ((Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) && gameOver) {
+            gameStateManager.push(new PlayState(gameStateManager));
         }
     }
 
     @Override
     public void update(float dt) {
         handleInput();
-        updateGround();
-        ago.update(dt);
+        if (gameOn) {
+            updateGround();
+            ago.update(dt);
 
-        camera.position.x = ago.getPosition().x + 80;  // camera follows Ago
+            camera.position.x = ago.getPosition().x + 80;  // camera follows Ago
 
-        for (Tube tube: tubes) {
-            if (camera.position.x - (camera.viewportWidth / 2) > tube.getPositionTopTube().x
-                    + tube.getTopTube().getWidth()) {
-                tube.reposition(tube.getPositionTopTube().x + ((Tube.TUBE_WIDTH
-                        + SPACE_BETWEEN_TUBES) * TUBE_COUNT));
+            for (Tube tube : tubes) {
+                if (camera.position.x - (camera.viewportWidth / 2) > tube.getPositionTopTube().x
+                        + tube.getTopTube().getWidth()) {
+                    tube.reposition(tube.getPositionTopTube().x + ((Tube.TUBE_WIDTH
+                            + SPACE_BETWEEN_TUBES) * TUBE_COUNT));
+                }
+
+                if (tube.collides(ago.getBounds())) {  // check collision with tubes
+                    die.play(FlappyAgo.masterVolume);
+                    gameOver = true;
+                    gameOn = false;
+                    // gameStateManager.push(new GameOverState(gameStateManager));
+                }
             }
 
-            if (tube.collides(ago.getBounds())) {  // check collision with tubes
-                die.play(0.5f);
-
-                // gameStateManager.set(new PlayState(gameStateManager));
-
-                gameStateManager.set(new GameOverState(gameStateManager));
+            if (ago.getPosition().y <= ground.getHeight() + GROUND_Y_OFFSET) { // check collision with ground
+                die.play(FlappyAgo.masterVolume);
+                gameOver = true;
+                gameOn = false;
+                // gameStateManager.push(new GameOverState(gameStateManager));
             }
-            /*
-            if (tube.getPositionTopTube().x + (Tube.TUBE_WIDTH / 2) == ago.getPosition().x) {
-                score += 1;
-                System.out.println("lisasin skoooei" + score);
-            }
-            */
+
+            camera.update();
         }
-
-        if (ago.getPosition().y <= ground.getHeight() + GROUND_Y_OFFSET) { // check collision with ground
-            die.play(0.5f);
-
-            gameStateManager.set(new GameOverState(gameStateManager));
-        }
-
-        camera.update();
     }
 
     private void updateGround() {
@@ -134,6 +161,20 @@ public class PlayState extends State {
 
         sb.draw(ground, groundPosition1.x, groundPosition1.y);
         sb.draw(ground, groundPosition2.x, groundPosition2.y);
+
+        // TODO draw sound button nd make it work
+        // sb.draw(soundTexture, camera.position.x - (camera.viewportWidth / 2)  - 100, camera.position.y);
+
+        if (gameOver) {
+            // gameOver text
+            sb.draw(bgGameOver, camera.position.x - 105, camera.position.y - 30);
+            font.getData().setScale(0.5f, 0.5f);
+            font.setColor(Color.BLACK);
+            font.draw(sb, "GameOver", camera.position.x - 90, camera.position.y + 130);
+            font.getData().setScale(0.3f, 0.3f);
+            font.draw(sb, "Score ", camera.position.x - 90, camera.position.y + 50);
+            font.draw(sb, "Best ", camera.position.x - 90, camera.position.y + 10);
+        }
 
         sb.end();
     }

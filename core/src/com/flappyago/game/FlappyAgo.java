@@ -28,10 +28,10 @@ public class FlappyAgo extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		gameStateManager = new GameStateManager();
 
-		music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
-		music.setLooping(true);
-		music.setVolume(0.01f);  // 1f is 100% volume
-		music.play();
+//		music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
+//		music.setLooping(true);
+//		music.setVolume(0.01f);  // 1f is 100% volume
+//		music.play();
 
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 

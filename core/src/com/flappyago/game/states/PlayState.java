@@ -21,6 +21,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.flappyago.game.FlappyAgo;
 import com.flappyago.game.sprites.Ago;
+import com.flappyago.game.sprites.Animation;
 import com.flappyago.game.sprites.Tube;
 
 import java.util.ArrayList;
@@ -150,6 +151,7 @@ public class PlayState extends State {
         sb.begin();
 
         sb.draw(background, camera.position.x - (camera.viewportWidth / 2), 0);
+//        FlappyAgo.playMusic.play();
 
         sb.draw(ago.getTexture(), ago.getPosition().x, ago.getPosition().y);
 
@@ -174,6 +176,7 @@ public class PlayState extends State {
             font.getData().setScale(0.3f, 0.3f);
             font.draw(sb, "Score ", camera.position.x - 90, camera.position.y + 50);
             font.draw(sb, "Best ", camera.position.x - 90, camera.position.y + 10);
+            FlappyAgo.playMusic.stop();
         }
 
         sb.end();
@@ -184,6 +187,7 @@ public class PlayState extends State {
         background.dispose();
         ago.dispose();
         ground.dispose();
+        FlappyAgo.playMusic.stop();
 
         for (Tube tube : tubes) {
             tube.dispose();

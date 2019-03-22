@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.flappyago.game.states.GameStateManager;
 import com.flappyago.game.states.MenuState;
 
+
 public class FlappyAgo extends ApplicationAdapter {
 
 	public static final int WIDTH = 480;  // 480
@@ -19,18 +20,23 @@ public class FlappyAgo extends ApplicationAdapter {
 	private SpriteBatch batch;
 
 	public static float masterVolume;
-	public Music music;
+	public static Music menuMusic;
+	public static Music playMusic;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		gameStateManager = new GameStateManager();
 
-		music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
-		music.setLooping(true);
+		menuMusic = Gdx.audio.newMusic(Gdx.files.internal("musicb.mp3"));
+		menuMusic.setLooping(true);
+		menuMusic.setVolume(0.5f);  // 1f is 100% volume
+		menuMusic.play();
+
+		playMusic = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
+		playMusic.setLooping(true);
 		masterVolume = 0.5f;
-		music.setVolume(masterVolume);  // 1f is 100% volume
-		music.play();
+		playMusic.setVolume(masterVolume);  // 1f is 100% volume
 
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 
@@ -39,7 +45,8 @@ public class FlappyAgo extends ApplicationAdapter {
 
 	public void setMasterVolume(float newVolume) {
 		masterVolume = newVolume;
-		music.setVolume(masterVolume);
+		menuMusic.setVolume(masterVolume);
+		playMusic.setVolume(masterVolume);
 	}
 
 	@Override
@@ -57,6 +64,7 @@ public class FlappyAgo extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		super.dispose();
-		music.dispose();
+		playMusic.dispose();
+		menuMusic.dispose();
 	}
 }

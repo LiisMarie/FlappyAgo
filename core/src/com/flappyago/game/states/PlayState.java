@@ -134,9 +134,9 @@ public class PlayState extends State {
             gameOn = true;
             ago.jump();
         } else if (newGame) {
-            gameStateManager.push(new PlayState(gameStateManager));
+            gameStateManager.set(new PlayState(gameStateManager));
         } else if (backToMenu) {
-            gameStateManager.push(new MenuState(gameStateManager));
+            gameStateManager.set(new MenuState(gameStateManager));
         }
     }
 
@@ -233,7 +233,7 @@ public class PlayState extends State {
             font.getData().setScale(0.3f, 0.3f);
             font.draw(sb, "Score " + Integer.toString(score), camera.position.x - 90, camera.position.y + 50);
             font.draw(sb, "Best " + Integer.toString(FlappyAgo.maxScore), camera.position.x - 90, camera.position.y + 10);
-            FlappyAgo.playMusic.stop();
+//            FlappyAgo.playMusic.stop();
             ago.newStart = true;
 
 

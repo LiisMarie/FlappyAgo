@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -34,6 +36,7 @@ import java.util.ArrayList;
 public class PlayState extends State {
     // tubes
     private int score;
+    GlyphLayout layout;
     private static final int SPACE_BETWEEN_TUBES = 125;  // space between tubes, not including tubes
     private static final int TUBE_COUNT = 4;
     private ArrayList<Tube> tubes;
@@ -55,6 +58,7 @@ public class PlayState extends State {
     private boolean newGame = false;
     private ImageButton menuButton;
     private boolean backToMenu = false;
+    private Label scoreLabel;
 
     private Sound die;
 
@@ -94,7 +98,7 @@ public class PlayState extends State {
         // dying sound
         die = Gdx.audio.newSound(Gdx.files.internal("dying.ogg"));
 
-        font = new BitmapFont(Gdx.files.internal("flappybirdy.fnt"));
+        font = new BitmapFont(Gdx.files.internal("flappybirdy2.fnt"));
 
         // playbutton on gameover screen
         Texture playTexture = new Texture("play_button.png");
@@ -121,6 +125,7 @@ public class PlayState extends State {
                 return true;
             }
         });
+        layout = new GlyphLayout();
     }
 
     @Override
@@ -209,7 +214,11 @@ public class PlayState extends State {
                     tube.getPositionBottomTube().y);
         }
         if (!gameOver) {
-            font.draw(sb, Integer.toString(score), camera.position.x, camera.position.y + 185);
+            String scoreString = Integer.toString(score);
+            layout.setText(font, scoreString);
+            float width = layout.width;
+            font.setUseIntegerPositions(false);
+            font.draw(sb, scoreString, camera.position.x - width / 2, camera.position.y + 185);
         }
         sb.draw(ground, groundPosition1.x, groundPosition1.y);
         sb.draw(ground, groundPosition2.x, groundPosition2.y);

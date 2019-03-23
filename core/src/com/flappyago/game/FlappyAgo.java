@@ -19,12 +19,15 @@ public class FlappyAgo extends ApplicationAdapter {
 	private GameStateManager gameStateManager;
 	private SpriteBatch batch;
 
+	public static int maxScore;
 	public static float masterVolume;
 	public static Music menuMusic;
 	public static Music playMusic;
-	
+
+
 	@Override
 	public void create () {
+		maxScore = 0;
 		batch = new SpriteBatch();
 		gameStateManager = new GameStateManager();
 
@@ -48,6 +51,7 @@ public class FlappyAgo extends ApplicationAdapter {
 		menuMusic.setVolume(masterVolume);
 		playMusic.setVolume(masterVolume);
 	}
+
 
 	@Override
 	public void render () {

@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.flappyago.game.FlappyAgo;
-import com.flappyago.game.sprites.Ago;
 
 public class GameOverState extends State {
     private Texture background;

@@ -78,4 +78,8 @@ public class Ago {
     public Rectangle getBounds() {
         return bounds;
     }
+
+    public int getScore() {
+        return score;
+    }
 }

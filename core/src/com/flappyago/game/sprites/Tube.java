@@ -7,8 +7,6 @@ import com.flappyago.game.states.PlayState;
 
 import java.util.Random;
 
-import static jdk.nashorn.internal.objects.NativeMath.abs;
-
 public class Tube {
     private static final int FLUCTUATION = 130;
     private static final int TUBE_GAP = 100;

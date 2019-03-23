@@ -13,7 +13,6 @@ import com.flappyago.game.FlappyAgo;
 import com.flappyago.game.sprites.Ago;
 import com.flappyago.game.sprites.Tube;
 
-import java.awt.geom.Arc2D;
 import java.util.ArrayList;
 
 public class PlayState extends State {
@@ -76,7 +75,7 @@ public class PlayState extends State {
 
         die = Gdx.audio.newSound(Gdx.files.internal("dying.ogg"));
 
-        font = new BitmapFont(Gdx.files.internal("learning_curve.fnt"));
+        font = new BitmapFont(Gdx.files.internal("flappybirdy2.fnt"));
     }
 
     @Override
@@ -157,8 +156,9 @@ public class PlayState extends State {
             sb.draw(tube.getBottomTube(), tube.getPositionBottomTube().x,
                     tube.getPositionBottomTube().y);
         }
-        font.draw(sb, Integer.toString(score), camera.position.x, camera.position.y + 185);
-
+        if (!gameOver) {
+            font.draw(sb, Integer.toString(score), camera.position.x, camera.position.y + 185);
+        }
         sb.draw(ground, groundPosition1.x, groundPosition1.y);
         sb.draw(ground, groundPosition2.x, groundPosition2.y);
 
@@ -170,7 +170,7 @@ public class PlayState extends State {
             sb.draw(bgGameOver, camera.position.x - 105, camera.position.y - 30);
             font.getData().setScale(0.5f, 0.5f);
             font.setColor(Color.BLACK);
-            font.draw(sb, "GameOver", camera.position.x - 90, camera.position.y + 130);
+            font.draw(sb, "Game Over", camera.position.x - 90, camera.position.y + 130);
             font.getData().setScale(0.3f, 0.3f);
             font.draw(sb, "Score " + Integer.toString(score), camera.position.x - 90, camera.position.y + 50);
             font.draw(sb, "Best " + Integer.toString(FlappyAgo.maxScore), camera.position.x - 90, camera.position.y + 10);

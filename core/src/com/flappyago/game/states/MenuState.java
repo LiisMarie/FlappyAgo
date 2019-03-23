@@ -115,14 +115,16 @@ public class MenuState extends State {
             gameStateManager.set(new PlayState(gameStateManager));
 
         } else if (soundButton.isPressed() &&  // && Gdx.input.justTouched()
-                ((FlappyAgo)Gdx.app.getApplicationListener()).music.getVolume() != 0) {
+                ((FlappyAgo.menuMusic.getVolume() != 0) &&
+                        FlappyAgo.playMusic.getVolume() != 0)) {
             soundButton.remove();
             changeSoundButton("OFF");
             ((FlappyAgo)Gdx.app.getApplicationListener()).setMasterVolume(0);
             // sets the volume of the music to 0
 
         } else if (soundButton.isPressed() &&  // // && Gdx.input.justTouched()
-                ((FlappyAgo)Gdx.app.getApplicationListener()).music.getVolume() == 0) {
+                ((FlappyAgo.menuMusic.getVolume() == 0) &&
+                        FlappyAgo.playMusic.getVolume() == 0)) {
             soundButton.remove();
             changeSoundButton("ON");
             ((FlappyAgo) Gdx.app.getApplicationListener()).setMasterVolume(0.5f);
@@ -150,10 +152,12 @@ public class MenuState extends State {
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
+        FlappyAgo.menuMusic.play();
     }
 
     @Override
     public void dispose() {
+        FlappyAgo.menuMusic.stop();
         stage.dispose();
         System.out.println("Menu state disposed");
     }

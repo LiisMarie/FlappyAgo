@@ -8,7 +8,10 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.flappyago.game.FlappyAgo;
 
+import java.util.Random;
+
 public class Ago {
+    public boolean newStart;
     private static final int GRAVITY = -15;
     private float movement;
     private int score;
@@ -23,6 +26,7 @@ public class Ago {
     private Sound fly;
 
     public Ago(int x, int y) {
+        newStart = true;
         position = new Vector3(x, y, 0);  // Ago's starting point
         velocity = new Vector3(0, 0, 0);  // before starting speed is 0
         movement = 100;
@@ -36,10 +40,15 @@ public class Ago {
     }
 
     public void update(float dt) {
-
-        //FlappyAgo.playMusic.play();
+        if (newStart) {
+            Random random = new Random();
+            String number = String.valueOf(random.nextInt(6));
+            FlappyAgo.playMusic = Gdx.audio.newMusic(Gdx.files.internal("music" + number + ".mp3"));
+            newStart = false;
+        }
+        FlappyAgo.playMusic.play();
         agoAnimation.update(dt);
-        movement += 0.1;
+        movement += 0.03;
 
         if (0 < position.y) {
             velocity.add(0, GRAVITY, 0);

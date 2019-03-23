@@ -19,7 +19,7 @@ public class SettingsState extends State {
     public SettingsState(GameStateManager gameStateManager) {
         super(gameStateManager);
         camera.setToOrtho(false, FlappyAgo.WIDTH / 2,
-                FlappyAgo.HEIGHT / 2);
+                FlappyAgo.HEIGHT >> 1);
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
 
         viewport = new StretchViewport(FlappyAgo.WIDTH, FlappyAgo.HEIGHT, camera);

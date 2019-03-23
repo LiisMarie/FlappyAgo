@@ -10,7 +10,8 @@ import com.flappyago.game.FlappyAgo;
 
 public class Ago {
     private static final int GRAVITY = -15;
-    private static final int MOVEMENT = 100;
+    private float movement;
+    private int score;
 
     private Vector3 position;
     private Vector3 velocity;
@@ -25,7 +26,8 @@ public class Ago {
     public Ago(int x, int y) {
         position = new Vector3(x, y, 0);  // Ago's starting point
         velocity = new Vector3(0, 0, 0);  // before starting speed is 0
-
+        movement = 100;
+        score = 0;
         texture = new Texture("ago_animation.png");
         agoAnimation = new Animation(new TextureRegion(texture), 3, 0.5f);
 
@@ -35,14 +37,17 @@ public class Ago {
     }
 
     public void update(float dt) {
+
+        FlappyAgo.playMusic.play();
         agoAnimation.update(dt);
+        movement += 0.1;
 
         if (0 < position.y) {
             velocity.add(0, GRAVITY, 0);
         }
 
         velocity.scl(dt);
-        position.add(MOVEMENT * dt, velocity.y, 0);
+        position.add(movement * dt, velocity.y, 0);
 
         if (position.y < 0) {
             position.y = 0;
@@ -72,5 +77,9 @@ public class Ago {
 
     public Rectangle getBounds() {
         return bounds;
+    }
+
+    public int getScore() {
+        return score;
     }
 }

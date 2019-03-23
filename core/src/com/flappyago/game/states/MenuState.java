@@ -118,14 +118,14 @@ public class MenuState extends State {
                 ((FlappyAgo)Gdx.app.getApplicationListener()).menuMusic.getVolume() != 0) {
             soundButton.remove();
             changeSoundButton("OFF");
-            ((FlappyAgo)Gdx.app.getApplicationListener()).setMasterVolume(0);
+            FlappyAgo.setMasterVolume(0);
             // sets the volume of the music to 0
 
         } else if (soundButton.isPressed() &&  // // && Gdx.input.justTouched()
                 ((FlappyAgo)Gdx.app.getApplicationListener()).menuMusic.getVolume() == 0) {
             soundButton.remove();
             changeSoundButton("ON");
-            ((FlappyAgo) Gdx.app.getApplicationListener()).setMasterVolume(0.5f);
+            FlappyAgo.setMasterVolume(0.5f);
             // sets the volume back high
         }
     }

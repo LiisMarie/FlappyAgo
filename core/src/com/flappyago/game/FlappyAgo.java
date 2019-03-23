@@ -52,7 +52,7 @@ public class FlappyAgo extends ApplicationAdapter {
 		gameStateManager.push(new MenuState(gameStateManager));
 	}
 
-	public void setMasterVolume(float newVolume) {
+	public static void setMasterVolume(float newVolume) {
 		masterVolume = newVolume;
 		menuMusic.setVolume(masterVolume);
 		playMusic.setVolume(masterVolume);

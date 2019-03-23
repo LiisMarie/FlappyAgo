@@ -27,6 +27,7 @@ public class Ago {
     // private Sound dying;  /// BRLIIIING here
 
     public Ago(int x, int y) {
+        FlappyAgo.playMusic.stop();
         newStart = true;
         position = new Vector3(x, y, 0);  // Ago's starting point
         velocity = new Vector3(0, 0, 0);  // before starting speed is 0
@@ -45,6 +46,7 @@ public class Ago {
             Random random = new Random();
             String number = String.valueOf(random.nextInt(6));
             FlappyAgo.playMusic = Gdx.audio.newMusic(Gdx.files.internal("music" + number + ".mp3"));
+            FlappyAgo.playMusic.setVolume(FlappyAgo.masterVolume);
             newStart = false;
         }
         FlappyAgo.playMusic.play();

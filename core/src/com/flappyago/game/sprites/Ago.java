@@ -21,7 +21,6 @@ public class Ago {
     private Animation agoAnimation;
 
     private Sound fly;
-    // private Sound dying;  /// BRLIIIING here
 
     public Ago(int x, int y) {
         position = new Vector3(x, y, 0);  // Ago's starting point
@@ -38,7 +37,7 @@ public class Ago {
 
     public void update(float dt) {
 
-        FlappyAgo.playMusic.play();
+        //FlappyAgo.playMusic.play();
         agoAnimation.update(dt);
         movement += 0.1;
 

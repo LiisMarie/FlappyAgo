@@ -24,7 +24,6 @@ public class Ago {
     private Animation agoAnimation;
 
     private Sound fly;
-    // private Sound dying;  /// BRLIIIING here
 
     public Ago(int x, int y) {
         newStart = true;

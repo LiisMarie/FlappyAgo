@@ -35,7 +35,6 @@ public class FlappyAgo extends ApplicationAdapter {
 		menuMusic = Gdx.audio.newMusic(Gdx.files.internal("menumusic.mp3"));
 		menuMusic.setLooping(true);
 		menuMusic.setVolume(0.5f);  // 1f is 100% volume
-		menuMusic.play();
 
 		playMusic = Gdx.audio.newMusic(Gdx.files.internal("music1.mp3"));
 		playMusic.setLooping(true);
@@ -57,7 +56,6 @@ public class FlappyAgo extends ApplicationAdapter {
 		menuMusic.setVolume(masterVolume);
 		playMusic.setVolume(masterVolume);
 	}
-
 
 	@Override
 	public void render () {

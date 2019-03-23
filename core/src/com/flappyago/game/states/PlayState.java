@@ -175,6 +175,7 @@ public class PlayState extends State {
             font.draw(sb, "Score " + Integer.toString(score), camera.position.x - 90, camera.position.y + 50);
             font.draw(sb, "Best " + Integer.toString(FlappyAgo.maxScore), camera.position.x - 90, camera.position.y + 10);
             FlappyAgo.playMusic.stop();
+            ago.newStart = true;
         }
 
         sb.end();

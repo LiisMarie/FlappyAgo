@@ -43,14 +43,16 @@ public class Ago {
     public void update(float dt) {
         if (newStart) {
             Random random = new Random();
-            String number = String.valueOf(random.nextInt(6));
+            String number = String.valueOf(random.nextInt(7));
             FlappyAgo.playMusic = Gdx.audio.newMusic(Gdx.files.internal("music" + number + ".mp3"));
             FlappyAgo.playMusic.setVolume(FlappyAgo.masterVolume);
             newStart = false;
         }
         FlappyAgo.playMusic.play();
         agoAnimation.update(dt);
-        movement += 0.03;
+        if (movement < 200) {
+            movement += 0.02;
+        }
 
         if (0 < position.y) {
             velocity.add(0, GRAVITY, 0);
@@ -87,9 +89,5 @@ public class Ago {
 
     public Rectangle getBounds() {
         return bounds;
-    }
-
-    public int getScore() {
-        return score;
     }
 }

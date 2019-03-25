@@ -21,8 +21,8 @@ public class Tube {
     private Random rand;
 
     public Tube(float x) {
-        topTube = new Texture("top_tube.png");
-        bottomTube = new Texture("bottom_tube.png");
+        topTube = new Texture("top_tube3.png");
+        bottomTube = new Texture("bottom_tube3.png");
 
         rand = new Random();
         positionTopTube = new Vector2(x, rand.nextInt(FLUCTUATION) + TUBE_GAP + LOWEST_OPENING);

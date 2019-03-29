@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -12,21 +11,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.flappyago.game.FlappyAgo;
 import com.flappyago.game.sprites.Ago;
 import com.flappyago.game.sprites.Tube;
@@ -104,7 +96,8 @@ public class PlayState extends State {
         Texture playTexture = new Texture("play_button.png");
         TextureRegionDrawable drawablePlay = new TextureRegionDrawable(new TextureRegion(playTexture));
         playButton = new ImageButton(drawablePlay);
-        playButton.setPosition(camera.position.x - playButton.getWidth() / 2 + 225, camera.position.y + 40);
+        playButton.setSize(70, 30);
+        playButton.setPosition(camera.position.x - playButton.getWidth() + 80, camera.position.y - 70);
         playButton.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)   {
                 System.out.println("Chose to play again");
@@ -117,7 +110,8 @@ public class PlayState extends State {
         Texture menuTexture = new Texture("menu_button.png");
         TextureRegionDrawable drawableMenu = new TextureRegionDrawable(new TextureRegion(menuTexture));
         menuButton = new ImageButton(drawableMenu);
-        menuButton.setPosition(camera.position.x - playButton.getWidth() / 2, camera.position.y + 40);
+        menuButton.setSize(70, 30);
+        menuButton.setPosition(camera.position.x - playButton.getWidth() - 15, camera.position.y - 70);
         menuButton.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)   {
                 System.out.println("Goin back to menu");
@@ -171,7 +165,6 @@ public class PlayState extends State {
                     die.play(soundVolume);
                     gameOver = true;
                     gameOn = false;
-                    // gameStateManager.push(new GameOverState(gameStateManager));
                 }
             }
 
@@ -179,12 +172,12 @@ public class PlayState extends State {
                 die.play(soundVolume);
                 gameOver = true;
                 gameOn = false;
-                // gameStateManager.push(new GameOverState(gameStateManager));
             }
 
             camera.update();
         }
     }
+
 
     private void updateGround() {
         if ((camera.position.x - (camera.viewportWidth / 2)) >
@@ -239,8 +232,7 @@ public class PlayState extends State {
 
         sb.end();
 
-
-            Stage stage = new Stage(new ScreenViewport());
+            Stage stage = new Stage(new StretchViewport(camera.viewportWidth, camera.viewportHeight));
             Gdx.input.setInputProcessor(stage);
             stage.addActor(playButton);
             stage.addActor(menuButton);
@@ -251,8 +243,6 @@ public class PlayState extends State {
             sb.end();
         }
     }
-
-    boolean clicked = false;
 
     @Override
     public void dispose() {

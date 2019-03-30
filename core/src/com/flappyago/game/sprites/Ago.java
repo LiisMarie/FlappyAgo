@@ -14,7 +14,6 @@ public class Ago {
     public boolean newStart;
     private static final int GRAVITY = -15;
     private float movement;
-    private int score;
 
     private Vector3 position;
     private Vector3 velocity;
@@ -31,7 +30,6 @@ public class Ago {
         position = new Vector3(x, y, 0);  // Ago's starting point
         velocity = new Vector3(0, 0, 0);  // before starting speed is 0
         movement = 100;
-        score = 0;
         texture = new Texture("ago_animation.png");
         agoAnimation = new Animation(new TextureRegion(texture), 3, 0.5f);
 

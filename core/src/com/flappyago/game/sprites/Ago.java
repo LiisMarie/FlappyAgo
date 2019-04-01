@@ -50,7 +50,7 @@ public class Ago {
         FlappyAgo.playMusic.play();
         agoAnimation.update(dt);
         if (movement < 200) {
-            movement += 0.02;
+            movement += 0.03;
         }
 
         if (0 < position.y) {

@@ -25,9 +25,8 @@ import com.flappyago.game.sprites.Tube;
 import java.util.ArrayList;
 
 public class PlayState extends State {
+
     // tubes
-    private int score;
-    GlyphLayout layout;
     private static final int SPACE_BETWEEN_TUBES = 125;  // space between tubes, not including tubes
     private static final int TUBE_COUNT = 4;
     private ArrayList<Tube> tubes;
@@ -43,7 +42,6 @@ public class PlayState extends State {
     private Texture ground;
     private Vector2 groundPosition1, groundPosition2;
 
-    private Preferences pref;
     // game over background
     private Texture bgGameOver;
     private ImageButton playButton;
@@ -51,11 +49,19 @@ public class PlayState extends State {
     private ImageButton menuButton;
     private boolean backToMenu = false;
 
+    // dying sound
     private Sound die;
 
+    // game booleans
     private boolean gameOn;
     public boolean gameOver;
 
+    // score
+    private int score;
+    private Preferences pref;
+
+    // text
+    GlyphLayout layout;
     BitmapFont font;
 
     public PlayState(GameStateManager gameStateManager) {
@@ -78,6 +84,7 @@ public class PlayState extends State {
                 GROUND_Y_OFFSET);
         groundPosition2 = new Vector2((camera.position.x - camera.viewportWidth / 2)
                 + ground.getWidth(), GROUND_Y_OFFSET);
+
         // preferences
         pref = Gdx.app.getPreferences("SharedPrefs");
 
@@ -90,6 +97,7 @@ public class PlayState extends State {
         // dying sound
         die = Gdx.audio.newSound(Gdx.files.internal("dying.ogg"));
 
+        // font
         font = new BitmapFont(Gdx.files.internal("flappybirdy2.fnt"));
 
         // playbutton on gameover screen
@@ -119,17 +127,20 @@ public class PlayState extends State {
                 return true;
             }
         });
+
         layout = new GlyphLayout();
     }
 
     @Override
     protected void handleInput() {
         if ((Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) && !gameOver) {
+            // if game hasn't started yet, it will start
+            // if game has started already then ago jumps
             gameOn = true;
             ago.jump();
-        } else if (newGame) {
+        } else if (newGame) {  // starts a new game
             gameStateManager.set(new PlayState(gameStateManager));
-        } else if (backToMenu) {
+        } else if (backToMenu) {  // goes back to the menu
             gameStateManager.set(new MenuState(gameStateManager));
         }
     }
@@ -144,7 +155,7 @@ public class PlayState extends State {
             camera.position.x = ago.getPosition().x + 80;  // camera follows Ago
 
             float soundVolume = FlappyAgo.masterVolume;
-            if (FlappyAgo.masterVolume != 0) {
+            if (FlappyAgo.masterVolume != 0) {  // set volume
                 soundVolume = 1f;
             }
 
@@ -155,7 +166,7 @@ public class PlayState extends State {
                             + SPACE_BETWEEN_TUBES) * TUBE_COUNT));
                 }
 
-                if (tube.addPoint(ago.getBounds())) {
+                if (tube.addPoint(ago.getBounds())) {  // add score
                     score++;
                     if (score > FlappyAgo.maxScore) FlappyAgo.maxScore = score;
                     System.out.println("SCORE: " + Integer.toString(score));
@@ -168,7 +179,7 @@ public class PlayState extends State {
                 }
             }
 
-            if (ago.getPosition().y <= ground.getHeight() + GROUND_Y_OFFSET) { // check collision with ground
+            if (ago.getPosition().y <= ground.getHeight() + GROUND_Y_OFFSET) {  // check collision with ground
                 die.play(soundVolume);
                 gameOver = true;
                 gameOn = false;
@@ -201,21 +212,35 @@ public class PlayState extends State {
 
         sb.draw(ago.getTexture(), ago.getPosition().x, ago.getPosition().y);
 
+        // draw tubes
         for(Tube tube : tubes) {
             sb.draw(tube.getTopTube(), tube.getPositionTopTube().x, tube.getPositionTopTube().y);
             sb.draw(tube.getBottomTube(), tube.getPositionBottomTube().x,
                     tube.getPositionBottomTube().y);
         }
-        if (!gameOver) {
+
+        // display text when game hasn't started yet
+        if (!gameOn && !gameOver) {
+            font.getData().setScale(0.5f, 0.5f);
+            font.setColor(Color.BLACK);
+            font.draw(sb, "Tap to begin!", camera.position.x - 115, camera.position.y + 130);
+        }
+
+        // display score during game
+        if (!gameOver && gameOn) {
             String scoreString = Integer.toString(score);
             layout.setText(font, scoreString);
             float width = layout.width;
             font.setUseIntegerPositions(false);
+            font.getData().setScale(1f, 1f);
             font.draw(sb, scoreString, camera.position.x - width / 2, camera.position.y + 185);
         }
+
+        // draw ground
         sb.draw(ground, groundPosition1.x, groundPosition1.y);
         sb.draw(ground, groundPosition2.x, groundPosition2.y);
 
+        // game over screen
         if (gameOver) {
             // gameOver text
             sb.draw(bgGameOver, camera.position.x - 105, camera.position.y - 30);
@@ -223,19 +248,22 @@ public class PlayState extends State {
             font.setColor(Color.BLACK);
             font.draw(sb, "GameOver", camera.position.x - 90, camera.position.y + 130);
 
+            // display current score and highscore
             font.getData().setScale(0.3f, 0.3f);
             font.draw(sb, "Score " + Integer.toString(score), camera.position.x - 90, camera.position.y + 50);
             font.draw(sb, "Best " + Integer.toString(FlappyAgo.maxScore), camera.position.x - 90, camera.position.y + 10);
 //            FlappyAgo.playMusic.stop();
             ago.newStart = true;
+
+            // write over the score if new one is greater
             if (score > pref.getInteger("HighScore")) {
                 pref.putInteger("HighScore", score);
                 pref.flush();
             }
 
-
         sb.end();
 
+            // add new game and back to menu buttons
             Stage stage = new Stage(new StretchViewport(camera.viewportWidth, camera.viewportHeight));
             Gdx.input.setInputProcessor(stage);
             stage.addActor(playButton);

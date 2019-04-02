@@ -42,7 +42,7 @@ public class Ago {
     public void update(float dt) {
         if (newStart) {
             Random random = new Random();
-            String number = String.valueOf(random.nextInt(7));
+            String number = String.valueOf(random.nextInt(8));
             FlappyAgo.playMusic = Gdx.audio.newMusic(Gdx.files.internal("music" + number + ".mp3"));
             FlappyAgo.playMusic.setVolume(FlappyAgo.masterVolume);
             newStart = false;

@@ -2,6 +2,7 @@ package com.flappyago.game.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,9 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.flappyago.game.FlappyAgo;
 import com.flappyago.game.sprites.Ago;
@@ -44,6 +43,7 @@ public class PlayState extends State {
     private Texture ground;
     private Vector2 groundPosition1, groundPosition2;
 
+    private Preferences pref;
     // game over background
     private Texture bgGameOver;
     private ImageButton playButton;
@@ -64,11 +64,10 @@ public class PlayState extends State {
         gameOn = false;
         gameOver = false;
 
-        ago = new Ago(50, 100);
+        ago = new Ago(50, 175);
 
         camera.setToOrtho(false, FlappyAgo.WIDTH / 2,
                 FlappyAgo.HEIGHT / 2);
-
         background = new Texture("background.png");
 
         bgGameOver = new Texture("game_over_background.png");
@@ -79,6 +78,8 @@ public class PlayState extends State {
                 GROUND_Y_OFFSET);
         groundPosition2 = new Vector2((camera.position.x - camera.viewportWidth / 2)
                 + ground.getWidth(), GROUND_Y_OFFSET);
+        // preferences
+        pref = Gdx.app.getPreferences("SharedPrefs");
 
         // tubes
         tubes = new ArrayList<Tube>();
@@ -227,6 +228,10 @@ public class PlayState extends State {
             font.draw(sb, "Best " + Integer.toString(FlappyAgo.maxScore), camera.position.x - 90, camera.position.y + 10);
 //            FlappyAgo.playMusic.stop();
             ago.newStart = true;
+            if (score > pref.getInteger("HighScore")) {
+                pref.putInteger("HighScore", score);
+                pref.flush();
+            }
 
 
         sb.end();

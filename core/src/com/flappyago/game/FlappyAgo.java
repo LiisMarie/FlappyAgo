@@ -11,7 +11,7 @@ import com.flappyago.game.states.MenuState;
 
 public class FlappyAgo extends ApplicationAdapter {
 	public static int maxScore;
-	public Preferences pref;
+	private Preferences pref;
 
 	public static final int WIDTH = 480;  // 480
 	public static final int HEIGHT = 750;  // 800

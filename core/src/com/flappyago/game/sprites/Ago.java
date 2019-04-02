@@ -14,7 +14,6 @@ public class Ago {
     public boolean newStart;
     private static final int GRAVITY = -15;
     private float movement;
-    private int score;
 
     private Vector3 position;
     private Vector3 velocity;
@@ -32,7 +31,6 @@ public class Ago {
         position = new Vector3(x, y, 0);  // Ago's starting point
         velocity = new Vector3(0, 0, 0);  // before starting speed is 0
         movement = 100;
-        score = 0;
         texture = new Texture("ago_animation.png");
         agoAnimation = new Animation(new TextureRegion(texture), 3, 0.5f);
 
@@ -44,14 +42,16 @@ public class Ago {
     public void update(float dt) {
         if (newStart) {
             Random random = new Random();
-            String number = String.valueOf(random.nextInt(6));
+            String number = String.valueOf(random.nextInt(8));
             FlappyAgo.playMusic = Gdx.audio.newMusic(Gdx.files.internal("music" + number + ".mp3"));
             FlappyAgo.playMusic.setVolume(FlappyAgo.masterVolume);
             newStart = false;
         }
         FlappyAgo.playMusic.play();
         agoAnimation.update(dt);
-        movement += 0.03;
+        if (movement < 200) {
+            movement += 0.03;
+        }
 
         if (0 < position.y) {
             velocity.add(0, GRAVITY, 0);
@@ -88,9 +88,5 @@ public class Ago {
 
     public Rectangle getBounds() {
         return bounds;
-    }
-
-    public int getScore() {
-        return score;
     }
 }

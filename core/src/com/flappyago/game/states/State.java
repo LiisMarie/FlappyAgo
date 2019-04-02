@@ -5,14 +5,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
 public abstract class State {
-    protected OrthographicCamera camera;
+    OrthographicCamera camera;
     // each state needs a camera to locate a position in the world
-    protected Vector3 mouse;
-    protected GameStateManager gameStateManager;
+    private Vector3 mouse;
+    GameStateManager gameStateManager;
     // helps to put game states on top of each other
     // for example pausing game and starting it again
 
-    protected State (GameStateManager gameStateManager) {
+    State(GameStateManager gameStateManager) {
         this.gameStateManager = gameStateManager;
         camera = new OrthographicCamera();
         mouse = new Vector3();

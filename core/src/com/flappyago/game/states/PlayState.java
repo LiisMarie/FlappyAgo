@@ -50,7 +50,6 @@ public class PlayState extends State {
     private boolean newGame = false;
     private ImageButton menuButton;
     private boolean backToMenu = false;
-    private Label scoreLabel;
 
     private Sound die;
 

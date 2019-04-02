@@ -1,14 +1,15 @@
 package com.flappyago.game.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -29,14 +30,40 @@ public class MenuState extends State {
     private Drawable drawableSound;
     private ImageButton soundButton;
 
+    // info button
+    private Texture infoTexture;
+    private Drawable drawableInfo;
+    private ImageButton infoButton;
+
+    // credits button
+    private Texture creditsTexture;
+    private Drawable drawableCredits;
+    private ImageButton creditsButton;
+
+    // close button
+    private Texture closeTexture;
+    private Drawable drawableClose;
+    private ImageButton closeCreditsButton;
+    private ImageButton closeInfoButton;
+
+    // booleans for info and credits
+    boolean displayInfo = false;
+    boolean displayCredits = false;
+
     // viewport
     private Viewport viewport;
 
     // stage
     private Stage stage;
 
+    // text
+    BitmapFont font;
+    Label title;
+
     public MenuState(GameStateManager gameStateManager) {
         super(gameStateManager);
+
+        font = new BitmapFont(Gdx.files.internal("flappybirdy2.fnt"));
 
         camera.setToOrtho(false, FlappyAgo.WIDTH / 2,
                 FlappyAgo.HEIGHT / 2);
@@ -45,7 +72,6 @@ public class MenuState extends State {
         viewport = new StretchViewport(FlappyAgo.WIDTH, FlappyAgo.HEIGHT, camera);
         stage = new Stage(viewport);
 
-
         // set background for menu
         backgroundTexture = new Texture("menu_background.png");
         Image bg = new Image(backgroundTexture);
@@ -53,6 +79,7 @@ public class MenuState extends State {
         bg.setSize(FlappyAgo.WIDTH, FlappyAgo.HEIGHT);  // set background image size
         stage.addActor(bg);
 
+        // set the volume button according to master volume
         if (FlappyAgo.masterVolume != 0) {
             changeSoundButton("ON");
         } else {
@@ -66,24 +93,43 @@ public class MenuState extends State {
         playButton.setPosition(camera.position.x - playButton.getWidth() / 2, camera.position.y);
         stage.addActor(playButton);
 
+        // set info button
+        infoTexture = new Texture("info_button.png");
+        drawableInfo = new TextureRegionDrawable(new TextureRegion(infoTexture));
+        infoButton = new ImageButton(drawableInfo);
+        infoButton.setSize(40, 50);
+        infoButton.setPosition(28, FlappyAgo.HEIGHT - infoButton.getHeight() - 32);
+        stage.addActor(infoButton);
+
+        // set credits button
+        creditsTexture = new Texture("credits_button.png");
+        drawableCredits = new TextureRegionDrawable(new TextureRegion(creditsTexture));
+        creditsButton = new ImageButton(drawableCredits);
+        creditsButton.setSize(70, 70);
+        creditsButton.setPosition(FlappyAgo.WIDTH - soundButton.getWidth() - 50, camera.position.y - 350);
+        stage.addActor(creditsButton);
+
+        // set close button
+        closeTexture = new Texture("close_button.png");
+        drawableClose = new TextureRegionDrawable(new TextureRegion(closeTexture));
+        // close info button
+        closeInfoButton = new ImageButton(drawableClose);
+        closeInfoButton.setSize(75, 75);
+        closeInfoButton.setPosition(FlappyAgo.WIDTH - soundButton.getWidth() - 70, camera.position.y - 350);
+        // close credits button
+        closeCreditsButton = new ImageButton(drawableClose);
+        closeCreditsButton.setSize(75, 75);
+        closeCreditsButton.setPosition(FlappyAgo.WIDTH - soundButton.getWidth() - 70, camera.position.y - 350);
+
+        // game title
+        title = new Label("Flappy Ago", new Label.LabelStyle(font, Color.BLACK));
+        title.setFontScale(1);
+        title.setX(camera.position.x - title.getWidth() / 2);
+        title.setY(camera.position.y + 100);
+        stage.addActor(title);
 
         stage.getViewport().apply();
         Gdx.input.setInputProcessor(stage);
-
-        playButton.addListener(new EventListener() {
-            @Override
-            public boolean handle(Event event) {
-                return Gdx.input.justTouched();
-            }
-        });
-
-        soundButton.addListener(new EventListener() {
-            @Override
-            public boolean handle(Event event) {
-                return Gdx.input.justTouched();
-            }
-        });
-
     }
 
     private void changeSoundButton(String str) {
@@ -104,31 +150,124 @@ public class MenuState extends State {
         stage.getViewport().update(width, height);
         stage.getCamera().viewportWidth = FlappyAgo.WIDTH;
         stage.getCamera().viewportHeight = FlappyAgo.WIDTH * height / width;
-        stage.getCamera().position.set(stage.getCamera().viewportWidth / 2, stage.getCamera().viewportHeight / 2, 0);
+        stage.getCamera().position.set(stage.getCamera().viewportWidth / 2,
+                stage.getCamera().viewportHeight / 2, 0);
         stage.getCamera().update();
     }
 
     @Override
     public void handleInput() {
         // when user has touched the screen (with mouse or button)
-        if (playButton.isPressed()) {  // && Gdx.input.justTouched()
+        //PLAYBUTTON
+        if (playButton.isPressed()) {
             gameStateManager.set(new PlayState(gameStateManager));
+        }
 
-        } else if (soundButton.isPressed() &&  // && Gdx.input.justTouched()
-                ((FlappyAgo.menuMusic.getVolume() != 0) &&
-                        FlappyAgo.playMusic.getVolume() != 0)) {
+        // SOUNDBUTTON
+        if (soundButton.isPressed() && ((FlappyAgo.menuMusic.getVolume() != 0) &&
+                FlappyAgo.playMusic.getVolume() != 0)) {
             soundButton.remove();
             changeSoundButton("OFF");
-            FlappyAgo.setMasterVolume(0);
-            // sets the volume of the music to 0
+            FlappyAgo.setMasterVolume(0);  // sets the volume of the music to 0
 
-        } else if (soundButton.isPressed() &&  // // && Gdx.input.justTouched()
-                ((FlappyAgo.menuMusic.getVolume() == 0) &&
-                        FlappyAgo.playMusic.getVolume() == 0)) {
+        } else if (soundButton.isPressed() && ((FlappyAgo.menuMusic.getVolume() == 0) &&
+                FlappyAgo.playMusic.getVolume() == 0)) {
             soundButton.remove();
             changeSoundButton("ON");
-            FlappyAgo.setMasterVolume(0.5f);
-            // sets the volume back high
+            FlappyAgo.setMasterVolume(0.5f);  // sets the volume back high
+        }
+
+        // INFO BUTTON
+        if (infoButton.isPressed()) {
+            if (!displayInfo) {
+                System.out.println("pressed INFO button");
+                displayInfo = true;
+                stage.addActor(closeInfoButton);
+
+                // remove menu stuff
+                infoButton.remove();
+                creditsButton.remove();
+                playButton.remove();
+
+                // instructions title
+                Label instructionsTitle = new Label("Instructions", new Label.LabelStyle(font, Color.BLACK));
+                instructionsTitle.setFontScale(0.6f);
+                instructionsTitle.setX(camera.position.x - instructionsTitle.getWidth() / 2 + 90);
+                instructionsTitle.setY(camera.position.y);
+                stage.addActor(instructionsTitle);
+
+                // instructions text
+                Label instructions = new Label("Take good care of Ago!" +
+                        "\n \nDon't let him fall on the ground and fly against the Pythons." +
+                        "\n \nTapping on the screen makes Ago jump.", new Label.LabelStyle(font, Color.BLACK));
+                instructions.setFontScale(0.4f);
+                instructions.setX(camera.position.x - 130);
+                instructions.setY(camera.position.y - 340);
+                instructions.setWrap(true);
+                instructions.setWidth(300);
+                stage.addActor(instructions);
+            }
+        }
+        if (closeInfoButton.isPressed()) {
+            if (displayInfo) {
+                System.out.println("pressed CLOSE INFO button");
+                displayInfo = false;
+
+                // remove stuff related to info screen
+                stage.getActors().pop();  // removes instructions text
+                stage.getActors().pop();  // removes instructions title
+                closeInfoButton.remove();
+
+                // add menu stuff back
+                stage.addActor(infoButton);
+                stage.addActor(creditsButton);
+                stage.addActor(playButton);
+            }
+        }
+
+        // CREDITS BUTTONS
+        if (creditsButton.isPressed()) {
+            if (!displayCredits) {
+                System.out.println("pressed CREDITS button");
+                displayCredits = true;
+                stage.addActor(closeCreditsButton);
+                infoButton.remove();
+                creditsButton.remove();
+                playButton.remove();
+
+                // credits title
+                Label creditsTitle = new Label("Credits", new Label.LabelStyle(font, Color.BLACK));
+                creditsTitle.setFontScale(0.6f);
+                creditsTitle.setX(camera.position.x - creditsTitle.getWidth() / 2 + 50);
+                creditsTitle.setY(camera.position.y);
+                stage.addActor(creditsTitle);
+
+                // credits text
+                Label credits = new Label("Made by:" +
+                        "\n \nLiisu" +
+                        "\n \nRatu", new Label.LabelStyle(font, Color.BLACK));
+                credits.setFontScale(0.4f);
+                credits.setX(camera.position.x - 100);
+                credits.setY(camera.position.y - 300);
+                credits.setWrap(true);
+                credits.setWidth(300);
+                stage.addActor(credits);
+            }
+        }
+        if (closeCreditsButton.isPressed()) {
+            if (displayCredits) {
+                System.out.println("pressed CLOSE CREDITS button");
+
+                // remove stuff related to credits screen
+                stage.getActors().pop();  // removes credits text
+                stage.getActors().pop();  // removes credits title
+                closeCreditsButton.remove();
+
+                // add menu stuff back
+                stage.addActor(infoButton);
+                stage.addActor(creditsButton);
+                stage.addActor(playButton);
+            }
         }
     }
 

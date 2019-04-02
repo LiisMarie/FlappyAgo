@@ -3,7 +3,6 @@ package com.flappyago.game.sprites;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.flappyago.game.states.PlayState;
 
 import java.util.Random;
 
@@ -12,7 +11,7 @@ public class Tube {
     private static final int TUBE_GAP = 100;
     private static final int LOWEST_OPENING = 120;
     public static final int TUBE_WIDTH = 52;
-    public boolean hasPointScored = false;
+    private boolean hasPointScored = false;
 
     private Texture topTube, bottomTube;
     private Vector2 positionTopTube, positionBottomTube;

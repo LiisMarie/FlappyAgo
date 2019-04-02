@@ -188,6 +188,7 @@ public class MenuState extends State {
                 infoButton.remove();
                 creditsButton.remove();
                 playButton.remove();
+                soundButton.remove();
 
                 // instructions title
                 Label instructionsTitle = new Label("Instructions", new Label.LabelStyle(font, Color.BLACK));
@@ -222,6 +223,7 @@ public class MenuState extends State {
                 stage.addActor(infoButton);
                 stage.addActor(creditsButton);
                 stage.addActor(playButton);
+                stage.addActor(soundButton);
             }
         }
 
@@ -234,6 +236,7 @@ public class MenuState extends State {
                 infoButton.remove();
                 creditsButton.remove();
                 playButton.remove();
+                soundButton.remove();
 
                 // credits title
                 Label creditsTitle = new Label("Credits", new Label.LabelStyle(font, Color.BLACK));
@@ -268,6 +271,7 @@ public class MenuState extends State {
                 stage.addActor(infoButton);
                 stage.addActor(creditsButton);
                 stage.addActor(playButton);
+                stage.addActor(soundButton);
             }
         }
     }

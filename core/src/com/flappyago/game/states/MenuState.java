@@ -257,6 +257,7 @@ public class MenuState extends State {
         if (closeCreditsButton.isPressed()) {
             if (displayCredits) {
                 System.out.println("pressed CLOSE CREDITS button");
+                displayCredits = false;
 
                 // remove stuff related to credits screen
                 stage.getActors().pop();  // removes credits text

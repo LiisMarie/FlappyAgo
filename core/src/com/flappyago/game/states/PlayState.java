@@ -260,8 +260,4 @@ public class PlayState extends State {
         }
         System.out.println("Play state disposed");
     }
-
-    public int getScore() {
-        return this.score;
-    }
 }

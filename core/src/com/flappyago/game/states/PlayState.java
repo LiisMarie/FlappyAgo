@@ -108,9 +108,12 @@ public class PlayState extends State {
         playButton.setPosition(camera.position.x - playButton.getWidth() + 80, camera.position.y - 70);
         playButton.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)   {
-                System.out.println("Chose to play again");
-                newGame = true;
-                return true;
+                if (gameOver && !gameOn) {
+                    System.out.println("Chose to play again");
+                    newGame = true;
+                    return true;
+                }
+                return false;
             }
         });
 
@@ -176,6 +179,7 @@ public class PlayState extends State {
                     die.play(soundVolume);
                     gameOver = true;
                     gameOn = false;
+                    System.out.println("Collided with a tube!");
                 }
             }
 
@@ -183,6 +187,7 @@ public class PlayState extends State {
                 die.play(soundVolume);
                 gameOver = true;
                 gameOn = false;
+                System.out.println("Collided with ground!");
             }
 
             camera.update();
@@ -282,6 +287,7 @@ public class PlayState extends State {
         ago.dispose();
         ground.dispose();
         FlappyAgo.playMusic.stop();
+        System.out.println("Music stopped...");
 
         for (Tube tube : tubes) {
             tube.dispose();

@@ -296,12 +296,16 @@ public class MenuState extends State {
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
-        FlappyAgo.menuMusic.play();
+        if (!FlappyAgo.menuMusic.isPlaying()) {
+            FlappyAgo.menuMusic.play();
+            System.out.println("Menu music started to play!");
+        }
     }
 
     @Override
     public void dispose() {
         FlappyAgo.menuMusic.stop();
+        System.out.println("Menu music stopped...");
         stage.dispose();
         System.out.println("Menu state disposed");
     }

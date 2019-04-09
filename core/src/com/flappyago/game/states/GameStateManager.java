@@ -1,7 +1,6 @@
 package com.flappyago.game.states;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.flappyago.game.FlappyAgo;
 
 import java.util.Stack;
 

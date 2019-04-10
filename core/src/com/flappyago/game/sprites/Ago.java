@@ -26,7 +26,7 @@ public class Ago {
     // private Sound dying;  /// BRLIIIING here
 
     public Ago(int x, int y) {
-        FlappyAgo.playMusic.stop();
+        FlappyAgo.playMusic.dispose();
         newStart = true;
         position = new Vector3(x, y, 0);  // Ago's starting point
         velocity = new Vector3(0, 0, 0);  // before starting speed is 0
@@ -42,12 +42,13 @@ public class Ago {
     public void update(float dt) {
         if (newStart) {
             Random random = new Random();
-            String number = String.valueOf(random.nextInt(8));
+            String number = String.valueOf(random.nextInt(7));
             FlappyAgo.playMusic = Gdx.audio.newMusic(Gdx.files.internal("music" + number + ".mp3"));
             FlappyAgo.playMusic.setVolume(FlappyAgo.masterVolume);
             newStart = false;
+            FlappyAgo.playMusic.play();
+            System.out.println("Music starts to play!");
         }
-        FlappyAgo.playMusic.play();
         agoAnimation.update(dt);
         if (movement < 200) {
             movement += 0.03;

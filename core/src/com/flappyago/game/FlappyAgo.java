@@ -14,7 +14,7 @@ public class FlappyAgo extends ApplicationAdapter {
 	private Preferences pref;
 
 	public static final int WIDTH = 480;  // 480
-	public static final int HEIGHT = 750;  // 800
+	public static final int HEIGHT = 750;  // 750
 
 	public static final String TITLE = "Flappy Ago";
 

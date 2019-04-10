@@ -187,6 +187,7 @@ public class PlayState extends State {
                 die.play(soundVolume);
                 gameOver = true;
                 gameOn = false;
+                ago.getPosition().y = 62;
                 System.out.println("Collided with ground!");
             }
 

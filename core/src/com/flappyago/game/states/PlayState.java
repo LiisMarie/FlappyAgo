@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.flappyago.game.FlappyAgo;
+import com.flappyago.game.music.GameMusic;
 import com.flappyago.game.sprites.Ago;
 import com.flappyago.game.sprites.Tube;
 
@@ -39,9 +40,6 @@ public class PlayState extends State {
 
     // buttons
     private static final int BUTTON_WIDTH = 70, BUTTON_HEIGHT = 30;
-
-    // dying sound
-    private Sound die;
 
     // ground
     private static final int GROUND_Y_OFFSET = -50;
@@ -107,7 +105,7 @@ public class PlayState extends State {
         }
 
         // dying sound
-        die = Gdx.audio.newSound(Gdx.files.internal("dying.ogg"));
+
 
         // font
         font = new BitmapFont(Gdx.files.internal("flappybirdy2.fnt"));
@@ -169,11 +167,6 @@ public class PlayState extends State {
 
             camera.position.x = ago.getPosition().x + AGO_BEHIND_CENTER;  // camera follows Ago
 
-            float soundVolume = FlappyAgo.masterVolume;
-            if (FlappyAgo.masterVolume != 0) {  // set volume
-                soundVolume = 1f;
-            }
-
             for (Tube tube : tubes) {
                 if (camera.position.x - (camera.viewportWidth / 2) > tube.getPositionTopTube().x
                         + tube.getTopTube().getWidth()) {
@@ -188,7 +181,7 @@ public class PlayState extends State {
                 }
 
                 if (tube.collides(ago.getBounds())) {  // check collision with tubes
-                    die.play(soundVolume);
+                    GameMusic.playDying();
                     gameOver = true;
                     gameOn = false;
                     System.out.println("Collided with a tube!");
@@ -196,7 +189,7 @@ public class PlayState extends State {
             }
 
             if (ago.getPosition().y <= ground.getHeight() + GROUND_Y_OFFSET) {  // check collision with ground
-                die.play(soundVolume);
+                GameMusic.playDying();
                 gameOver = true;
                 gameOn = false;
                 ago.getPosition().y = GROUND_Y_OFFSET + ground.getHeight();
@@ -284,7 +277,7 @@ public class PlayState extends State {
                 pref.flush();
             }
 
-        sb.end();
+            sb.end();
 
             // add new game and back to menu buttons
             Stage stage = new Stage(new StretchViewport(camera.viewportWidth, camera.viewportHeight));
@@ -304,7 +297,7 @@ public class PlayState extends State {
         background.dispose();
         ago.dispose();
         ground.dispose();
-        FlappyAgo.playMusic.stop();
+        GameMusic.getPlayMusic().dispose();
         System.out.println("Music stopped...");
 
         for (Tube tube : tubes) {

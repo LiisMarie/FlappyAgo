@@ -26,21 +26,31 @@ import java.util.ArrayList;
 
 public class PlayState extends State {
 
-    // tubes
-    private static final int SPACE_BETWEEN_TUBES = 125;  // space between tubes, not including tubes
-    private static final int TUBE_COUNT = 4;
-    private ArrayList<Tube> tubes;
+
 
     // Ago
     private Ago ago;
+    private static final int AGO_BEHIND_CENTER = 80;
+    private static final int AGO_STARTING_POSITION_X = FlappyAgo.WIDTH / 4 - AGO_BEHIND_CENTER;
+    private static final int AGO_STARTING_POSITION_Y = FlappyAgo.HEIGHT / 4;
 
     // background
     private Texture background;
+
+    // buttons
+    private static final int BUTTON_WIDTH = 70, BUTTON_HEIGHT = 30;
+
+    // dying sound
+    private Sound die;
 
     // ground
     private static final int GROUND_Y_OFFSET = -50;
     private Texture ground;
     private Vector2 groundPosition1, groundPosition2;
+
+    // game booleans
+    private boolean gameOn;
+    public boolean gameOver;
 
     // game over background
     private Texture bgGameOver;
@@ -49,13 +59,6 @@ public class PlayState extends State {
     private ImageButton menuButton;
     private boolean backToMenu = false;
 
-    // dying sound
-    private Sound die;
-
-    // game booleans
-    private boolean gameOn;
-    public boolean gameOver;
-
     // score
     private int score;
     private Preferences pref;
@@ -63,6 +66,15 @@ public class PlayState extends State {
     // text
     GlyphLayout layout;
     BitmapFont font;
+    private static final float SCORE_FONT = 0.65f;
+    private static final float TITLE_FONT = 0.5f;
+    private static final float BOX_FONT = 0.3f;
+
+    // tubes
+    private static final int SPACE_BETWEEN_TUBES = 125;  // space between tubes, not including tubes
+    private static final int TUBE_COUNT = 4;
+    private ArrayList<Tube> tubes;
+
 
     public PlayState(GameStateManager gameStateManager) {
         super(gameStateManager);
@@ -70,7 +82,7 @@ public class PlayState extends State {
         gameOn = false;
         gameOver = false;
 
-        ago = new Ago(50, 175);
+        ago = new Ago(AGO_STARTING_POSITION_X, AGO_STARTING_POSITION_Y);
 
         camera.setToOrtho(false, FlappyAgo.WIDTH / 2,
                 FlappyAgo.HEIGHT / 2);
@@ -104,7 +116,7 @@ public class PlayState extends State {
         Texture playTexture = new Texture("play_button.png");
         TextureRegionDrawable drawablePlay = new TextureRegionDrawable(new TextureRegion(playTexture));
         playButton = new ImageButton(drawablePlay);
-        playButton.setSize(70, 30);
+        playButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         playButton.setPosition(camera.position.x - playButton.getWidth() + 80, camera.position.y - 70);
         playButton.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)   {
@@ -121,7 +133,7 @@ public class PlayState extends State {
         Texture menuTexture = new Texture("menu_button.png");
         TextureRegionDrawable drawableMenu = new TextureRegionDrawable(new TextureRegion(menuTexture));
         menuButton = new ImageButton(drawableMenu);
-        menuButton.setSize(70, 30);
+        menuButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         menuButton.setPosition(camera.position.x - playButton.getWidth() - 15, camera.position.y - 70);
         menuButton.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)   {
@@ -155,7 +167,7 @@ public class PlayState extends State {
             updateGround();
             ago.update(dt);
 
-            camera.position.x = ago.getPosition().x + 80;  // camera follows Ago
+            camera.position.x = ago.getPosition().x + AGO_BEHIND_CENTER;  // camera follows Ago
 
             float soundVolume = FlappyAgo.masterVolume;
             if (FlappyAgo.masterVolume != 0) {  // set volume
@@ -187,8 +199,13 @@ public class PlayState extends State {
                 die.play(soundVolume);
                 gameOver = true;
                 gameOn = false;
-                ago.getPosition().y = 62;
+                ago.getPosition().y = GROUND_Y_OFFSET + ground.getHeight();
                 System.out.println("Collided with ground!");
+            }
+
+            if (ago.getPosition().y >= FlappyAgo.HEIGHT / 2 - ago.getTexture().getRegionHeight()) {
+                ago.getPosition().y = FlappyAgo.HEIGHT / 2 - ago.getTexture().getRegionHeight();
+                ago.getVelocity().y = 0;
             }
 
             camera.update();
@@ -227,7 +244,7 @@ public class PlayState extends State {
 
         // display text when game hasn't started yet
         if (!gameOn && !gameOver) {
-            font.getData().setScale(0.5f, 0.5f);
+            font.getData().setScale(TITLE_FONT);
             font.setColor(Color.BLACK);
             font.draw(sb, "Tap to begin!", camera.position.x - 115, camera.position.y + 130);
         }
@@ -238,8 +255,8 @@ public class PlayState extends State {
             layout.setText(font, scoreString);
             float width = layout.width;
             font.setUseIntegerPositions(false);
-            font.getData().setScale(1f, 1f);
-            font.draw(sb, scoreString, camera.position.x - width / 2, camera.position.y + 185);
+            font.getData().setScale(SCORE_FONT);
+            font.draw(sb, scoreString, camera.position.x - width / 2, camera.position.y + FlappyAgo.HEIGHT / 4);
         }
 
         // draw ground
@@ -250,12 +267,12 @@ public class PlayState extends State {
         if (gameOver) {
             // gameOver text
             sb.draw(bgGameOver, camera.position.x - 105, camera.position.y - 30);
-            font.getData().setScale(0.5f, 0.5f);
+            font.getData().setScale(TITLE_FONT);
             font.setColor(Color.BLACK);
             font.draw(sb, "GameOver", camera.position.x - 90, camera.position.y + 130);
 
             // display current score and highscore
-            font.getData().setScale(0.3f, 0.3f);
+            font.getData().setScale(BOX_FONT);
             font.draw(sb, "Score " + Integer.toString(score), camera.position.x - 90, camera.position.y + 50);
             font.draw(sb, "Best " + Integer.toString(FlappyAgo.maxScore), camera.position.x - 90, camera.position.y + 10);
 //            FlappyAgo.playMusic.stop();

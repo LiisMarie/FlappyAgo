@@ -47,7 +47,32 @@ public class Ago {
             FlappyAgo.playMusic.setVolume(FlappyAgo.masterVolume);
             newStart = false;
             FlappyAgo.playMusic.play();
-            System.out.println("Music starts to play!");
+            switch (Integer.parseInt(number)) {
+                case 0:
+                    System.out.println("'Taylor Swift - Bad Blood' started to play!");
+                    break;
+                case 1:
+                    System.out.println("'Baby Got Athletic' started to play!");
+                    break;
+                case 2:
+                    System.out.println("'Rick Astley - Never Gonna Give You Up' started to play!");
+                    break;
+                case 3:
+                    System.out.println("'Selena Gomez & Charlie Puth - We Don't Talk Anymore' started to play!");
+                    break;
+                case 4:
+                    System.out.println("'Bag Raiders - Shooting Stars' started to play!");
+                    break;
+                case 5:
+                    System.out.println("'Ed Sheeran - Shape of You' - started to play!");
+                    break;
+                case 6:
+                    System.out.println("'Käh' started to play!");
+                default:
+                    System.out.println("Music started to play!");
+                    break;
+            }
+
         }
         agoAnimation.update(dt);
         if (movement < 200) {
@@ -81,6 +106,10 @@ public class Ago {
 
     public Vector3 getPosition() {
         return position;
+    }
+
+    public Vector3 getVelocity() {
+        return velocity;
     }
 
     public TextureRegion getTexture() {

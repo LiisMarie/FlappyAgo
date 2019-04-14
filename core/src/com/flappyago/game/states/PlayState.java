@@ -203,6 +203,11 @@ public class PlayState extends State {
                 System.out.println("Collided with ground!");
             }
 
+            if (ago.getPosition().y >= FlappyAgo.HEIGHT / 2 - ago.getTexture().getRegionHeight()) {
+                ago.getPosition().y = FlappyAgo.HEIGHT / 2 - ago.getTexture().getRegionHeight();
+                ago.getVelocity().y = 0;
+            }
+
             camera.update();
         }
     }

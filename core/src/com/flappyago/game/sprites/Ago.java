@@ -108,6 +108,10 @@ public class Ago {
         return position;
     }
 
+    public Vector3 getVelocity() {
+        return velocity;
+    }
+
     public TextureRegion getTexture() {
         return agoAnimation.getFrame();
     }

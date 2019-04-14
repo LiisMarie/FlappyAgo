@@ -167,11 +167,6 @@ public class PlayState extends State {
 
             camera.position.x = ago.getPosition().x + AGO_BEHIND_CENTER;  // camera follows Ago
 
-            float soundVolume = GameMusic.masterVolume;
-            if (GameMusic.masterVolume != 0) {  // set volume
-                soundVolume = 1f;
-            }
-
             for (Tube tube : tubes) {
                 if (camera.position.x - (camera.viewportWidth / 2) > tube.getPositionTopTube().x
                         + tube.getTopTube().getWidth()) {
@@ -186,7 +181,7 @@ public class PlayState extends State {
                 }
 
                 if (tube.collides(ago.getBounds())) {  // check collision with tubes
-                    GameMusic.die.play(soundVolume);
+                    GameMusic.playDying();
                     gameOver = true;
                     gameOn = false;
                     System.out.println("Collided with a tube!");
@@ -194,7 +189,7 @@ public class PlayState extends State {
             }
 
             if (ago.getPosition().y <= ground.getHeight() + GROUND_Y_OFFSET) {  // check collision with ground
-                GameMusic.die.play(soundVolume);
+                GameMusic.playDying();
                 gameOver = true;
                 gameOn = false;
                 ago.getPosition().y = GROUND_Y_OFFSET + ground.getHeight();
@@ -302,7 +297,7 @@ public class PlayState extends State {
         background.dispose();
         ago.dispose();
         ground.dispose();
-        GameMusic.playMusic.dispose();
+        GameMusic.getPlayMusic().dispose();
         System.out.println("Music stopped...");
 
         for (Tube tube : tubes) {

@@ -81,7 +81,7 @@ public class MenuState extends State {
         stage.addActor(bg);
 
         // set the volume button according to master volume
-        if (GameMusic.masterVolume != 0) {
+        if (GameMusic.getMasterVolume() != 0) {
             changeSoundButton("ON");
         } else {
             changeSoundButton("OFF");
@@ -165,14 +165,14 @@ public class MenuState extends State {
         }
 
         // SOUNDBUTTON
-        if (soundButton.isPressed() && ((GameMusic.menuMusic.getVolume() != 0) &&
-                GameMusic.playMusic.getVolume() != 0)) {
+        if (soundButton.isPressed() && ((GameMusic.getMenuMusic().getVolume() != 0) &&
+                GameMusic.getPlayMusic().getVolume() != 0)) {
             soundButton.remove();
             changeSoundButton("OFF");
             GameMusic.setMasterVolume(0);  // sets the volume of the music to 0
 
-        } else if (soundButton.isPressed() && ((GameMusic.menuMusic.getVolume() == 0) &&
-                GameMusic.playMusic.getVolume() == 0)) {
+        } else if (soundButton.isPressed() && ((GameMusic.getMenuMusic().getVolume() == 0) &&
+                GameMusic.getPlayMusic().getVolume() == 0)) {
             soundButton.remove();
             changeSoundButton("ON");
             GameMusic.setMasterVolume(0.5f);  // sets the volume back high
@@ -297,15 +297,15 @@ public class MenuState extends State {
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
-        if (!GameMusic.menuMusic.isPlaying()) {
-            GameMusic.menuMusic.play();
+        if (!GameMusic.getMenuMusic().isPlaying()) {
+            GameMusic.getMenuMusic().play();
             System.out.println("Menu music started to play!");
         }
     }
 
     @Override
     public void dispose() {
-        GameMusic.menuMusic.stop();
+        GameMusic.getMenuMusic().stop();
         System.out.println("Menu music stopped...");
         stage.dispose();
         System.out.println("Menu state disposed");

@@ -26,7 +26,7 @@ public class Ago {
     // private Sound dying;  /// BRLIIIING here
 
     public Ago(int x, int y) {
-        GameMusic.playMusic.dispose();
+        GameMusic.getPlayMusic().dispose();
         newStart = true;
         position = new Vector3(x, y, 0);  // Ago's starting point
         velocity = new Vector3(0, 0, 0);  // before starting speed is 0
@@ -66,7 +66,7 @@ public class Ago {
 
     public void jump() {
         velocity.y = 250;
-        fly.play(GameMusic.masterVolume);
+        fly.play(GameMusic.getMasterVolume());
     }
 
     public void dispose() {

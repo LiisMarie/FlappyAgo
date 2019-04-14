@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.flappyago.game.FlappyAgo;
+import com.flappyago.game.music.GameMusic;
 
 import java.util.Random;
 
@@ -26,7 +26,7 @@ public class Ago {
     // private Sound dying;  /// BRLIIIING here
 
     public Ago(int x, int y) {
-        FlappyAgo.playMusic.dispose();
+        GameMusic.playMusic.dispose();
         newStart = true;
         position = new Vector3(x, y, 0);  // Ago's starting point
         velocity = new Vector3(0, 0, 0);  // before starting speed is 0
@@ -41,38 +41,8 @@ public class Ago {
 
     public void update(float dt) {
         if (newStart) {
-            Random random = new Random();
-            String number = String.valueOf(random.nextInt(7));
-            FlappyAgo.playMusic = Gdx.audio.newMusic(Gdx.files.internal("music" + number + ".mp3"));
-            FlappyAgo.playMusic.setVolume(FlappyAgo.masterVolume);
             newStart = false;
-            FlappyAgo.playMusic.play();
-            switch (Integer.parseInt(number)) {
-                case 0:
-                    System.out.println("'Taylor Swift - Bad Blood' started to play!");
-                    break;
-                case 1:
-                    System.out.println("'Baby Got Athletic' started to play!");
-                    break;
-                case 2:
-                    System.out.println("'Rick Astley - Never Gonna Give You Up' started to play!");
-                    break;
-                case 3:
-                    System.out.println("'Selena Gomez & Charlie Puth - We Don't Talk Anymore' started to play!");
-                    break;
-                case 4:
-                    System.out.println("'Bag Raiders - Shooting Stars' started to play!");
-                    break;
-                case 5:
-                    System.out.println("'Ed Sheeran - Shape of You' - started to play!");
-                    break;
-                case 6:
-                    System.out.println("'Käh' started to play!");
-                default:
-                    System.out.println("Music started to play!");
-                    break;
-            }
-
+            GameMusic.start();
         }
         agoAnimation.update(dt);
         if (movement < 200) {
@@ -96,7 +66,7 @@ public class Ago {
 
     public void jump() {
         velocity.y = 250;
-        fly.play(FlappyAgo.masterVolume);
+        fly.play(GameMusic.masterVolume);
     }
 
     public void dispose() {

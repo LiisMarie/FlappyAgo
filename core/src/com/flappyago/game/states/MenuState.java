@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.flappyago.game.FlappyAgo;
+import com.flappyago.game.music.GameMusic;
 
 public class MenuState extends State {
     // background
@@ -80,7 +81,7 @@ public class MenuState extends State {
         stage.addActor(bg);
 
         // set the volume button according to master volume
-        if (FlappyAgo.masterVolume != 0) {
+        if (GameMusic.masterVolume != 0) {
             changeSoundButton("ON");
         } else {
             changeSoundButton("OFF");
@@ -164,17 +165,17 @@ public class MenuState extends State {
         }
 
         // SOUNDBUTTON
-        if (soundButton.isPressed() && ((FlappyAgo.menuMusic.getVolume() != 0) &&
-                FlappyAgo.playMusic.getVolume() != 0)) {
+        if (soundButton.isPressed() && ((GameMusic.menuMusic.getVolume() != 0) &&
+                GameMusic.playMusic.getVolume() != 0)) {
             soundButton.remove();
             changeSoundButton("OFF");
-            FlappyAgo.setMasterVolume(0);  // sets the volume of the music to 0
+            GameMusic.setMasterVolume(0);  // sets the volume of the music to 0
 
-        } else if (soundButton.isPressed() && ((FlappyAgo.menuMusic.getVolume() == 0) &&
-                FlappyAgo.playMusic.getVolume() == 0)) {
+        } else if (soundButton.isPressed() && ((GameMusic.menuMusic.getVolume() == 0) &&
+                GameMusic.playMusic.getVolume() == 0)) {
             soundButton.remove();
             changeSoundButton("ON");
-            FlappyAgo.setMasterVolume(0.5f);  // sets the volume back high
+            GameMusic.setMasterVolume(0.5f);  // sets the volume back high
         }
 
         // INFO BUTTON
@@ -296,15 +297,15 @@ public class MenuState extends State {
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
-        if (!FlappyAgo.menuMusic.isPlaying()) {
-            FlappyAgo.menuMusic.play();
+        if (!GameMusic.menuMusic.isPlaying()) {
+            GameMusic.menuMusic.play();
             System.out.println("Menu music started to play!");
         }
     }
 
     @Override
     public void dispose() {
-        FlappyAgo.menuMusic.stop();
+        GameMusic.menuMusic.stop();
         System.out.println("Menu music stopped...");
         stage.dispose();
         System.out.println("Menu state disposed");

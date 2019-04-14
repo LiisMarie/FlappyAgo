@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 public class GameMusic {
+    private static final int NUMBER_OF_SONGS = 10;
     private static float masterVolume;
     private static float soundVolume;
     private static Sound die;
@@ -70,6 +71,16 @@ public class GameMusic {
                 break;
             case 6:
                 System.out.println("'Käh' started to play!");
+                break;
+            case 7:
+                System.out.println("'Imagine Dragons - Radioactive' started to play!");
+                break;
+            case 8:
+                System.out.println("'Daft Punk - Get lucky' started to play!");
+                break;
+            case 9:
+                System.out.println("'DNCE - Cake by the Ocean' started to play!");
+                break;
             default:
                 System.out.println("Music started to play!");
                 break;
@@ -78,13 +89,13 @@ public class GameMusic {
 
     // Chooses a random song.
     private static String randomizer() {
-        chosenSong = String.valueOf(random.nextInt(7));
+        chosenSong = String.valueOf(random.nextInt(NUMBER_OF_SONGS));
         while (previousSongs.contains(chosenSong)) {
-            chosenSong = String.valueOf(random.nextInt(7));
+            chosenSong = String.valueOf(random.nextInt(NUMBER_OF_SONGS));
         }
         System.out.println("Previously used songs: " + previousSongs);
         previousSongs.add(chosenSong);
-        if (previousSongs.size() > 3) previousSongs.remove(0);
+        if (previousSongs.size() > 5) previousSongs.remove(0);
         System.out.println("Song this time: " + chosenSong);
         return chosenSong;
     }

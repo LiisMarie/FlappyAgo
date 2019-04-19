@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.flappyago.game.music.GameMusic;
 
-import java.util.Random;
 
 public class Ago {
     public boolean newStart;
@@ -22,9 +21,6 @@ public class Ago {
     private Texture texture;
     private Animation agoAnimation;
 
-    private Sound fly;
-    // private Sound dying;  /// BRLIIIING here
-
     public Ago(int x, int y) {
         GameMusic.getPlayMusic().dispose();
         newStart = true;
@@ -33,10 +29,7 @@ public class Ago {
         movement = 100;
         texture = new Texture("ago_animation.png");
         agoAnimation = new Animation(new TextureRegion(texture), 3, 0.5f);
-
         bounds = new Rectangle(x, y, texture.getWidth() / 3, texture.getHeight());
-
-        fly = Gdx.audio.newSound(Gdx.files.internal("sfx_wing.ogg"));
     }
 
     public void update(float dt) {
@@ -66,12 +59,11 @@ public class Ago {
 
     public void jump() {
         velocity.y = 250;
-        fly.play(GameMusic.getMasterVolume());
+        GameMusic.playFlying();
     }
 
     public void dispose() {
         texture.dispose();
-        fly.dispose();
     }
 
     public Vector3 getPosition() {

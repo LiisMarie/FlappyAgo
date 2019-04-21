@@ -3,7 +3,6 @@ package com.flappyago.game.states;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -26,8 +25,6 @@ import com.flappyago.game.sprites.Tube;
 import java.util.ArrayList;
 
 public class PlayState extends State {
-
-
 
     // Ago
     private Ago ago;
@@ -104,12 +101,16 @@ public class PlayState extends State {
             tubes.add(new Tube(i * (SPACE_BETWEEN_TUBES + Tube.TUBE_WIDTH)));
         }
 
-        // dying sound
-
-
         // font
         font = new BitmapFont(Gdx.files.internal("flappybirdy2.fnt"));
 
+        // creates new game and back to menu buttons for game over screen
+        createGameOverButtons();
+
+        layout = new GlyphLayout();
+    }
+
+    private void createGameOverButtons() {
         // playbutton on gameover screen
         Texture playTexture = new Texture("play_button.png");
         TextureRegionDrawable drawablePlay = new TextureRegionDrawable(new TextureRegion(playTexture));
@@ -140,8 +141,6 @@ public class PlayState extends State {
                 return true;
             }
         });
-
-        layout = new GlyphLayout();
     }
 
     @Override
@@ -223,9 +222,7 @@ public class PlayState extends State {
         // tells where in the game word we are,
         // so that only things, which camera is able to see, will be drawn
         sb.begin();
-
         sb.draw(background, camera.position.x - (camera.viewportWidth / 2), 0);
-
         sb.draw(ago.getTexture(), ago.getPosition().x, ago.getPosition().y);
 
         // draw tubes
@@ -258,33 +255,7 @@ public class PlayState extends State {
 
         // game over screen
         if (gameOver) {
-            // gameOver text
-            sb.draw(bgGameOver, camera.position.x - 105, camera.position.y - 30);
-            font.getData().setScale(TITLE_FONT);
-            font.setColor(Color.BLACK);
-            font.draw(sb, "GameOver", camera.position.x - 90, camera.position.y + 130);
-
-            // display current score and highscore
-            font.getData().setScale(BOX_FONT);
-            font.draw(sb, "Score " + Integer.toString(score), camera.position.x - 90, camera.position.y + 50);
-            font.draw(sb, "Best " + Integer.toString(FlappyAgo.maxScore), camera.position.x - 90, camera.position.y + 10);
-//            FlappyAgo.playMusic.stop();
-            ago.newStart = true;
-
-            // write over the score if new one is greater
-            if (score > pref.getInteger("HighScore")) {
-                pref.putInteger("HighScore", score);
-                pref.flush();
-            }
-
-            sb.end();
-
-            // add new game and back to menu buttons
-            Stage stage = new Stage(new StretchViewport(camera.viewportWidth, camera.viewportHeight));
-            Gdx.input.setInputProcessor(stage);
-            stage.addActor(playButton);
-            stage.addActor(menuButton);
-            stage.draw();
+            displayGameOverScreen(sb);
         }
 
         if (!gameOver) {
@@ -292,9 +263,39 @@ public class PlayState extends State {
         }
     }
 
+    private void displayGameOverScreen(SpriteBatch sb) {
+        // gameOver text
+        sb.draw(bgGameOver, camera.position.x - 105, camera.position.y - 30);
+        font.getData().setScale(TITLE_FONT);
+        font.setColor(Color.BLACK);
+        font.draw(sb, "GameOver", camera.position.x - 90, camera.position.y + 130);
+
+        // display current score and highscore
+        font.getData().setScale(BOX_FONT);
+        font.draw(sb, "Score " + Integer.toString(score), camera.position.x - 90, camera.position.y + 50);
+        font.draw(sb, "Best " + Integer.toString(FlappyAgo.maxScore), camera.position.x - 90, camera.position.y + 10);
+        ago.newStart = true;
+
+        // write over the score if new one is greater
+        if (score > pref.getInteger("HighScore")) {
+            pref.putInteger("HighScore", score);
+            pref.flush();
+        }
+
+        sb.end();
+
+        // add new game and back to menu buttons
+        Stage stage = new Stage(new StretchViewport(camera.viewportWidth, camera.viewportHeight));
+        Gdx.input.setInputProcessor(stage);
+        stage.addActor(playButton);
+        stage.addActor(menuButton);
+        stage.draw();
+    }
+
     @Override
     public void dispose() {
         background.dispose();
+        bgGameOver.dispose();
         ago.dispose();
         ground.dispose();
         GameMusic.getPlayMusic().dispose();

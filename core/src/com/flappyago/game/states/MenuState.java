@@ -48,8 +48,8 @@ public class MenuState extends State {
     private ImageButton closeInfoButton;
 
     // booleans for info and credits
-    boolean displayInfo = false;
-    boolean displayCredits = false;
+    private boolean displayInfo = false;
+    private boolean displayCredits = false;
 
     // viewport
     private Viewport viewport;
@@ -58,8 +58,8 @@ public class MenuState extends State {
     private Stage stage;
 
     // text
-    BitmapFont font;
-    Label title;
+    private BitmapFont font;
+    private Label title;
 
     public MenuState(GameStateManager gameStateManager) {
         super(gameStateManager);
@@ -87,6 +87,21 @@ public class MenuState extends State {
             changeSoundButton("OFF");
         }
 
+
+        createButtons();  // generates necessary buttons
+
+        // game title
+        title = new Label("Flappy Ago", new Label.LabelStyle(font, Color.BLACK));
+        title.setFontScale(1);
+        title.setX(camera.position.x - title.getWidth() / 2);
+        title.setY(camera.position.y + 100);
+        stage.addActor(title);
+
+        stage.getViewport().apply();
+        Gdx.input.setInputProcessor(stage);
+    }
+
+    private void createButtons() {
         // set play button
         playTexture = new Texture("play_button.png");
         drawablePlay = new TextureRegionDrawable(new TextureRegion(playTexture));
@@ -121,16 +136,6 @@ public class MenuState extends State {
         closeCreditsButton = new ImageButton(drawableClose);
         closeCreditsButton.setSize(75, 75);
         closeCreditsButton.setPosition(FlappyAgo.WIDTH - soundButton.getWidth() - 70, camera.position.y - 350);
-
-        // game title
-        title = new Label("Flappy Ago", new Label.LabelStyle(font, Color.BLACK));
-        title.setFontScale(1);
-        title.setX(camera.position.x - title.getWidth() / 2);
-        title.setY(camera.position.y + 100);
-        stage.addActor(title);
-
-        stage.getViewport().apply();
-        Gdx.input.setInputProcessor(stage);
     }
 
     private void changeSoundButton(String str) {
@@ -158,7 +163,7 @@ public class MenuState extends State {
 
     @Override
     public void handleInput() {
-        // when user has touched the screen (with mouse or button)
+        // when user has touched the screen (with mouse or finger)
         //PLAYBUTTON
         if (playButton.isPressed()) {
             gameStateManager.set(new PlayState(gameStateManager));
@@ -181,100 +186,117 @@ public class MenuState extends State {
         // INFO BUTTON
         if (infoButton.isPressed()) {
             if (!displayInfo) {
-                System.out.println("pressed INFO button");
-                displayInfo = true;
-                stage.addActor(closeInfoButton);
-
-                // remove menu stuff
-                infoButton.remove();
-                creditsButton.remove();
-                playButton.remove();
-                soundButton.remove();
-
-                // instructions title
-                Label instructionsTitle = new Label("Instructions", new Label.LabelStyle(font, Color.BLACK));
-                instructionsTitle.setFontScale(0.6f);
-                instructionsTitle.setX(camera.position.x - instructionsTitle.getWidth() / 2 + 90);
-                instructionsTitle.setY(camera.position.y);
-                stage.addActor(instructionsTitle);
-
-                // instructions text
-                Label instructions = new Label("Take good care of Ago!" +
-                        "\n \nDon't let him fall on the ground and fly against the Pythons." +
-                        "\n \nTapping on the screen makes Ago jump.", new Label.LabelStyle(font, Color.BLACK));
-                instructions.setFontScale(0.4f);
-                instructions.setX(camera.position.x - 130);
-                instructions.setY(camera.position.y - 340);
-                instructions.setWrap(true);
-                instructions.setWidth(300);
-                stage.addActor(instructions);
+                openInfo();
             }
         }
         if (closeInfoButton.isPressed()) {
             if (displayInfo) {
-                System.out.println("pressed CLOSE INFO button");
-                displayInfo = false;
-
-                // remove stuff related to info screen
-                stage.getActors().pop();  // removes instructions text
-                stage.getActors().pop();  // removes instructions title
-                closeInfoButton.remove();
-
-                // add menu stuff back
-                stage.addActor(infoButton);
-                stage.addActor(creditsButton);
-                stage.addActor(playButton);
-                stage.addActor(soundButton);
+                closeInfo();
             }
         }
 
         // CREDITS BUTTONS
         if (creditsButton.isPressed()) {
             if (!displayCredits) {
-                System.out.println("pressed CREDITS button");
-                displayCredits = true;
-                stage.addActor(closeCreditsButton);
-                infoButton.remove();
-                creditsButton.remove();
-                playButton.remove();
-                soundButton.remove();
-
-                // credits title
-                Label creditsTitle = new Label("Credits", new Label.LabelStyle(font, Color.BLACK));
-                creditsTitle.setFontScale(0.6f);
-                creditsTitle.setX(camera.position.x - creditsTitle.getWidth() / 2 + 50);
-                creditsTitle.setY(camera.position.y);
-                stage.addActor(creditsTitle);
-
-                // credits text
-                Label credits = new Label("Made by:" +
-                        "\n \nLiisu" +
-                        "\n \nRatu", new Label.LabelStyle(font, Color.BLACK));
-                credits.setFontScale(0.4f);
-                credits.setX(camera.position.x - 100);
-                credits.setY(camera.position.y - 300);
-                credits.setWrap(true);
-                credits.setWidth(300);
-                stage.addActor(credits);
+                openCredits();
             }
         }
         if (closeCreditsButton.isPressed()) {
             if (displayCredits) {
-                System.out.println("pressed CLOSE CREDITS button");
-                displayCredits = false;
-
-                // remove stuff related to credits screen
-                stage.getActors().pop();  // removes credits text
-                stage.getActors().pop();  // removes credits title
-                closeCreditsButton.remove();
-
-                // add menu stuff back
-                stage.addActor(infoButton);
-                stage.addActor(creditsButton);
-                stage.addActor(playButton);
-                stage.addActor(soundButton);
+                closeCredits();
             }
         }
+    }
+
+    private void removeMenu() {
+        infoButton.remove();
+        creditsButton.remove();
+        playButton.remove();
+        soundButton.remove();
+    }
+
+    private void addMenu() {
+        stage.addActor(infoButton);
+        stage.addActor(creditsButton);
+        stage.addActor(playButton);
+        stage.addActor(soundButton);
+    }
+
+    private void openInfo() {
+        System.out.println("pressed INFO button");
+        displayInfo = true;
+        stage.addActor(closeInfoButton);
+
+        removeMenu();  // remove menu stuff
+
+        // instructions title
+        Label instructionsTitle = new Label("Instructions", new Label.LabelStyle(font, Color.BLACK));
+        instructionsTitle.setFontScale(0.6f);
+        instructionsTitle.setX(camera.position.x - instructionsTitle.getWidth() / 2 + 90);
+        instructionsTitle.setY(camera.position.y);
+        stage.addActor(instructionsTitle);
+
+        // instructions text
+        Label instructions = new Label("Take good care of Ago!" +
+                "\n \nDon't let him fall on the ground and fly against the Pythons." +
+                "\n \nTapping on the screen makes Ago jump.", new Label.LabelStyle(font, Color.BLACK));
+        instructions.setFontScale(0.4f);
+        instructions.setX(camera.position.x - 130);
+        instructions.setY(camera.position.y - 340);
+        instructions.setWrap(true);
+        instructions.setWidth(300);
+        stage.addActor(instructions);
+    }
+
+    private void closeInfo() {
+        System.out.println("pressed CLOSE INFO button");
+        displayInfo = false;
+
+        // remove stuff related to info screen
+        stage.getActors().pop();  // removes instructions text
+        stage.getActors().pop();  // removes instructions title
+        closeInfoButton.remove();
+
+        addMenu();  // add menu stuff back
+    }
+
+    private void openCredits() {
+        System.out.println("pressed CREDITS button");
+        displayCredits = true;
+        stage.addActor(closeCreditsButton);
+
+        removeMenu();  // remove menu stuff
+
+        // credits title
+        Label creditsTitle = new Label("Credits", new Label.LabelStyle(font, Color.BLACK));
+        creditsTitle.setFontScale(0.6f);
+        creditsTitle.setX(camera.position.x - creditsTitle.getWidth() / 2 + 50);
+        creditsTitle.setY(camera.position.y);
+        stage.addActor(creditsTitle);
+
+        // credits text
+        Label credits = new Label("Made by:" +
+                "\n \n   Liisu"
+                + "\n \n   Ratu", new Label.LabelStyle(font, Color.BLACK));
+        credits.setFontScale(0.4f);
+        credits.setX(camera.position.x - 65);
+        credits.setY(camera.position.y - 300);
+        credits.setWrap(true);
+        credits.setWidth(300);
+        stage.addActor(credits);
+    }
+
+    private void closeCredits() {
+        System.out.println("pressed CLOSE CREDITS button");
+        displayCredits = false;
+
+        // remove stuff related to credits screen
+        stage.getActors().pop();  // removes credits text
+        stage.getActors().pop();  // removes credits title
+        closeCreditsButton.remove();
+
+
+        addMenu();  // add menu stuff back
     }
 
     @Override
@@ -288,11 +310,7 @@ public class MenuState extends State {
 
         stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
         stage.getCamera().update();
-
         stage.getBatch().begin();
-
-        // stage.getBatch().draw(backgroundTexture, 0, 0);
-        // stage.getBatch().draw(titleTexture, 0, 0);
         stage.getBatch().end();
 
         stage.act(Gdx.graphics.getDeltaTime());

@@ -13,8 +13,8 @@ public class FlappyAgo extends ApplicationAdapter {
 	public static int maxScore;
 	private Preferences pref;
 
-	public static final int WIDTH = 480;  // 480
-	public static final int HEIGHT = 750;  // 750
+	public static final int WIDTH = 480;
+	public static final int HEIGHT = 750;
 
 	public static final String TITLE = "Flappy Ago";
 

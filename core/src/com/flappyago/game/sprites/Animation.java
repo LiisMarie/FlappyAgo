@@ -8,7 +8,7 @@ public class Animation {
     private float maxFrameTime;  // how long the frame has to stay before switching to a new one
     private float currentFrameTime;  // show how long animation has been in current time
     private int frameCount;  // number of frames in the animation
-    private int frame;  // current frame, taht we are actually in
+    private int frame;  // current frame, that we are actually in
 
     public Animation(TextureRegion region, int frameCount, float cycleTime) {
         frames = new Array<TextureRegion>();

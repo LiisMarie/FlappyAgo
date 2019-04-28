@@ -28,7 +28,7 @@ public class GameMusic {
         menuMusic.setLooping(true);
         menuMusic.setVolume(0.5f);  // 1f is 100% volume
 
-        // In-game music neccessities.
+        // In-game music necessities.
         random = new Random();
         previousSongs = new ArrayList<String>();
 

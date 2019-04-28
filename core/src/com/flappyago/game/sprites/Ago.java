@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.flappyago.game.music.GameMusic;
 
-
 public class Ago {
     public boolean newStart;
     private static final int GRAVITY = -15;

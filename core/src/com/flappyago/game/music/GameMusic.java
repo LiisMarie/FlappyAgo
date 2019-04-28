@@ -13,6 +13,7 @@ public class GameMusic {
     private static float masterVolume;
     private static float soundVolume;
     private static Sound die;
+    private static Sound fly;
     private static Music menuMusic;
     private static Music playMusic;
     private static List<String> previousSongs;
@@ -42,6 +43,8 @@ public class GameMusic {
         if (GameMusic.getMasterVolume() != 0) {  // set volume
             soundVolume = 1f;
         }
+
+        fly = Gdx.audio.newSound(Gdx.files.internal("sfx_wing.ogg"));
     }
 
     // Chooses a music to play, plays it and prints out the name of the song.
@@ -105,11 +108,15 @@ public class GameMusic {
         die.play(soundVolume);
     }
 
+    // Plays flying sound.
+    public static void playFlying() { fly.play(soundVolume); }
+
     // Sets master volume.
     public static void setMasterVolume(float newVolume) {
         masterVolume = newVolume;
         menuMusic.setVolume(masterVolume);
         playMusic.setVolume(masterVolume);
+        soundVolume = 2 * newVolume;
     }
 
     public static Music getMenuMusic() {
@@ -123,6 +130,9 @@ public class GameMusic {
     public static Sound getDie() {
         return die;
     }
+
+    public static Sound getFly() { return fly;}
+
     public static float getMasterVolume() {
         return masterVolume;
     }

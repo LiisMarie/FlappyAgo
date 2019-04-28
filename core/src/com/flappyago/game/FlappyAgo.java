@@ -21,7 +21,6 @@ public class FlappyAgo extends ApplicationAdapter {
 	private GameStateManager gameStateManager;
 	private SpriteBatch batch;
 
-
 	@Override
 	public void create () {
 		GameMusic gameMusic = new GameMusic();

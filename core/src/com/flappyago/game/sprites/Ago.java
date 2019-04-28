@@ -20,8 +20,6 @@ public class Ago {
     private Texture texture;
     private Animation agoAnimation;
 
-    private Sound fly;
-
     public Ago(int x, int y) {
         GameMusic.getPlayMusic().dispose();
         newStart = true;
@@ -30,10 +28,7 @@ public class Ago {
         movement = 100;
         texture = new Texture("ago_animation.png");
         agoAnimation = new Animation(new TextureRegion(texture), 3, 0.5f);
-
         bounds = new Rectangle(x, y, texture.getWidth() / 3, texture.getHeight());
-
-        fly = Gdx.audio.newSound(Gdx.files.internal("sfx_wing.ogg"));
     }
 
     public void update(float dt) {
@@ -63,12 +58,11 @@ public class Ago {
 
     public void jump() {
         velocity.y = 250;
-        fly.play(GameMusic.getMasterVolume());
+        GameMusic.playFlying();
     }
 
     public void dispose() {
         texture.dispose();
-        fly.dispose();
     }
 
     public Vector3 getPosition() {

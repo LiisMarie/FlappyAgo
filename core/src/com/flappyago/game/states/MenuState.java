@@ -74,7 +74,7 @@ public class MenuState extends State {
         stage = new Stage(viewport);
 
         // set background for menu
-        backgroundTexture = new Texture("menu_background.png");
+        backgroundTexture = new Texture("background.png");
         Image bg = new Image(backgroundTexture);
         bg.setPosition(0, 0);  // bg location: left-hand bottom corner
         bg.setSize(FlappyAgo.WIDTH, FlappyAgo.HEIGHT);  // set background image size

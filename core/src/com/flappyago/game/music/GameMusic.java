@@ -118,6 +118,9 @@ public class GameMusic {
         playMusic.setVolume(masterVolume);
         soundVolume = 2 * newVolume;
     }
+    public static void createNewMenuMusic() {
+        menuMusic = Gdx.audio.newMusic(Gdx.files.internal("menumusic.mp3"));
+    }
 
     public static Music getMenuMusic() {
         return menuMusic;

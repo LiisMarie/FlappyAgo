@@ -1,5 +1,6 @@
 package com.flappyago.game.states;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -170,17 +171,19 @@ public class MenuState extends State {
         }
 
         // SOUNDBUTTON
-        if (soundButton.isPressed() && ((GameMusic.getMenuMusic().getVolume() != 0) &&
-                GameMusic.getPlayMusic().getVolume() != 0)) {
+        if (soundButton.isPressed() && GameMusic.getMasterVolume() != 0) {
             soundButton.remove();
             changeSoundButton("OFF");
+            GameMusic.getMenuMusic().stop();
             GameMusic.setMasterVolume(0);  // sets the volume of the music to 0
 
-        } else if (soundButton.isPressed() && ((GameMusic.getMenuMusic().getVolume() == 0) &&
-                GameMusic.getPlayMusic().getVolume() == 0)) {
+        } else if (soundButton.isPressed() && GameMusic.getMasterVolume() == 0) {
             soundButton.remove();
-            changeSoundButton("ON");
             GameMusic.setMasterVolume(0.5f);  // sets the volume back high
+            changeSoundButton("ON");
+            GameMusic.getMenuMusic().dispose(); // It looks shit but it works...
+            GameMusic.createNewMenuMusic();
+            GameMusic.getMenuMusic().play();
         }
 
         // INFO BUTTON

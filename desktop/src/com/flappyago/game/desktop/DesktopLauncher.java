@@ -11,7 +11,7 @@ public class DesktopLauncher {
 		config.width = FlappyAgo.WIDTH;
 		config.height = FlappyAgo.HEIGHT;
 		config.title = FlappyAgo.TITLE;
-
+		config.resizable = false;
 		new LwjglApplication(new FlappyAgo(), config);
 	}
 }

@@ -38,7 +38,7 @@ public class Ago {
         }
         agoAnimation.update(dt);
         if (movement < 200) {
-            movement += 0.03;
+            movement += 0.05;
         }
 
         if (0 < position.y) {

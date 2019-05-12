@@ -72,6 +72,7 @@ public class PlayState extends State {
     private ArrayList<Tube> tubes;
 
 
+
     public PlayState(GameStateManager gameStateManager) {
         super(gameStateManager);
 
@@ -161,6 +162,9 @@ public class PlayState extends State {
 
     @Override
     public void update(float dt) {
+//        if (ago.getPosition().y < AGO_STARTING_POSITION_Y + 5 && gameOn) {
+//            ago.jump();
+//        }
         handleInput();
         if (gameOn) {
             updateGround();

@@ -52,6 +52,7 @@ public class GameMusic {
         chosenSong = randomizer();
         playMusic = Gdx.audio.newMusic(Gdx.files.internal("music" + chosenSong + ".mp3"));
         playMusic.setVolume(GameMusic.masterVolume);
+        playMusic.setLooping(true);
         playMusic.play();
         switch (Integer.parseInt(chosenSong)) {
             case 0:

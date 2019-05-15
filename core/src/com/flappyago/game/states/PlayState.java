@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.flappyago.game.FlappyAgo;
 import com.flappyago.game.music.GameMusic;
+import com.flappyago.game.scores.Scores;
 import com.flappyago.game.sprites.Ago;
 import com.flappyago.game.sprites.Tube;
 
@@ -56,7 +57,7 @@ public class PlayState extends State {
 
     // score
     private int score;
-    private Preferences pref;
+    private Scores scores;
 
     // text
     GlyphLayout layout;
@@ -71,11 +72,14 @@ public class PlayState extends State {
     private ArrayList<Tube> tubes;
 
 
+
     public PlayState(GameStateManager gameStateManager) {
         super(gameStateManager);
 
         gameOn = false;
         gameOver = false;
+
+        scores = new Scores();
 
         ago = new Ago(AGO_STARTING_POSITION_X, AGO_STARTING_POSITION_Y);
 
@@ -92,8 +96,7 @@ public class PlayState extends State {
         groundPosition2 = new Vector2((camera.position.x - camera.viewportWidth / 2)
                 + ground.getWidth(), GROUND_Y_OFFSET);
 
-        // preferences
-        pref = Gdx.app.getPreferences("SharedPrefs");
+
 
         // tubes
         tubes = new ArrayList<Tube>();
@@ -159,6 +162,9 @@ public class PlayState extends State {
 
     @Override
     public void update(float dt) {
+//        if (ago.getPosition().y < AGO_STARTING_POSITION_Y + 5 && gameOn) {
+//            ago.jump();
+//        }
         handleInput();
         if (gameOn) {
             updateGround();
@@ -176,7 +182,7 @@ public class PlayState extends State {
                 if (tube.addPoint(ago.getBounds())) {  // add score
                     score++;
                     if (score > FlappyAgo.maxScore) FlappyAgo.maxScore = score;
-                    System.out.println("SCORE: " + Integer.toString(score));
+                    System.out.println("SCORE: " + score);
                 }
 
                 if (tube.collides(ago.getBounds())) {  // check collision with tubes
@@ -272,15 +278,12 @@ public class PlayState extends State {
 
         // display current score and highscore
         font.getData().setScale(BOX_FONT);
-        font.draw(sb, "Score " + Integer.toString(score), camera.position.x - 90, camera.position.y + 50);
-        font.draw(sb, "Best " + Integer.toString(FlappyAgo.maxScore), camera.position.x - 90, camera.position.y + 10);
+        font.draw(sb, "Score " + score, camera.position.x - 90, camera.position.y + 50);
+        font.draw(sb, "Best " + Scores.getMaxScore(), camera.position.x - 90, camera.position.y + 10);
         ago.newStart = true;
 
         // write over the score if new one is greater
-        if (score > pref.getInteger("HighScore")) {
-            pref.putInteger("HighScore", score);
-            pref.flush();
-        }
+        Scores.updateMax(score);
 
         sb.end();
 

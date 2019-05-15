@@ -24,6 +24,7 @@ public class Tube {
         bottomTube = new Texture("bottom_tube.png");
 
         rand = new Random();
+//        positionTopTube = new Vector2(x, 55 + TUBE_GAP + LOWEST_OPENING);
         positionTopTube = new Vector2(x, rand.nextInt(FLUCTUATION) + TUBE_GAP + LOWEST_OPENING);
         positionBottomTube = new Vector2(x, positionTopTube.y - TUBE_GAP - bottomTube.getHeight());
 
@@ -34,6 +35,7 @@ public class Tube {
     }
 
     public void reposition(float x) {
+//        positionTopTube.set(x, 55 + TUBE_GAP + LOWEST_OPENING);
         positionTopTube.set(x, rand.nextInt(FLUCTUATION) + TUBE_GAP + LOWEST_OPENING);
         positionBottomTube.set(x, positionTopTube.y - TUBE_GAP - bottomTube.getHeight());
         this.hasPointScored = false;

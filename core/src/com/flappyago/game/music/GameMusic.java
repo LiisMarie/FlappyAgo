@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 public class GameMusic {
-    private static final int NUMBER_OF_SONGS = 10;
+    private static final int NUMBER_OF_SONGS = 11;
     private static float masterVolume;
     private static float soundVolume;
     private static Sound die;

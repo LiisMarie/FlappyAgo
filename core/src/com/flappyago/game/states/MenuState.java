@@ -27,6 +27,11 @@ public class MenuState extends State {
     private Drawable drawablePlay;
     private ImageButton playButton;
 
+    // ai button
+    private Texture aiTexture;
+    private Drawable drawableAi;
+    private ImageButton aiButton;
+
     // sound button
     private Texture soundTexture;
     private Drawable drawableSound;
@@ -110,6 +115,13 @@ public class MenuState extends State {
         playButton.setPosition(camera.position.x - playButton.getWidth() / 2, camera.position.y);
         stage.addActor(playButton);
 
+        // set ai button
+        aiTexture = new Texture("ai_button.png");
+        drawableAi = new TextureRegionDrawable(new TextureRegion(aiTexture));
+        aiButton = new ImageButton(drawableAi);
+        aiButton.setPosition(camera.position.x - playButton.getWidth() / 2, camera.position.y - 80);
+        stage.addActor(aiButton);
+
         // set info button
         infoTexture = new Texture("info_button.png");
         drawableInfo = new TextureRegionDrawable(new TextureRegion(infoTexture));
@@ -167,7 +179,12 @@ public class MenuState extends State {
         // when user has touched the screen (with mouse or finger)
         //PLAYBUTTON
         if (playButton.isPressed()) {
-            gameStateManager.set(new PlayState(gameStateManager));
+            gameStateManager.set(new PlayState(gameStateManager, false));
+        }
+
+        //AIBUTTON
+        if (aiButton.isPressed()) {
+            gameStateManager.set(new PlayState(gameStateManager, true));
         }
 
         // SOUNDBUTTON
@@ -215,6 +232,7 @@ public class MenuState extends State {
         infoButton.remove();
         creditsButton.remove();
         playButton.remove();
+        aiButton.remove();
         soundButton.remove();
     }
 
@@ -222,6 +240,7 @@ public class MenuState extends State {
         stage.addActor(infoButton);
         stage.addActor(creditsButton);
         stage.addActor(playButton);
+        stage.addActor(aiButton);
         stage.addActor(soundButton);
     }
 

@@ -7,11 +7,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.flappyago.game.music.GameMusic;
+import com.flappyago.game.states.PlayState;
 
 public class Ago {
     public boolean newStart;
     private static final int GRAVITY = -15;
-    private float movement;
+    public float movement;
 
     private Vector3 position;
     private Vector3 velocity;
@@ -37,7 +38,7 @@ public class Ago {
             GameMusic.start();
         }
         agoAnimation.update(dt);
-        if (movement < 200) {
+        if (!PlayState.aiOn && movement < 200) {
             movement += 0.03;
         }
 

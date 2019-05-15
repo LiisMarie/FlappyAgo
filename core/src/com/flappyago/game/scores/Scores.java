@@ -11,12 +11,16 @@ import java.util.stream.Collectors;
 
 public class Scores {
     private static int maxScore;
+    private static int prevMax;
+    private static int aiScore;
     // private static List<Player> highScores;
     private static Preferences pref;
     public Scores() {
         // preferences
         pref = Gdx.app.getPreferences("SharedPrefs");
         maxScore = pref.getInteger("HighScore");
+        prevMax = maxScore;
+        aiScore = pref.getInteger("AiScore");
         /*highScores = new ArrayList<Player>();
         if (!pref.contains("Player5")) {
             pref.putString("Player1", "");
@@ -44,10 +48,16 @@ public class Scores {
     }
 
     // Update maximum score.
-    public static void updateMax(int score) {
-        if (score > maxScore) {
+    public static void updateMax(int score, boolean aiOn) {
+        if (!aiOn && score > maxScore) {
+            prevMax = maxScore;
             maxScore = score;
-            pref.putInteger("HighScore", score);
+            pref.putInteger("HighScore", maxScore);
+            pref.flush();
+        }
+        if (aiOn && score > aiScore) {
+            aiScore = score;
+            pref.putInteger("AiScore", aiScore);
             pref.flush();
         }
     }
@@ -65,5 +75,11 @@ public class Scores {
     // Return max score.
     public static int getMaxScore() {
         return maxScore;
+    }
+    public static int getPrevMax() {
+        return prevMax;
+    }
+    public static int getAiScore() {
+        return aiScore;
     }
 }

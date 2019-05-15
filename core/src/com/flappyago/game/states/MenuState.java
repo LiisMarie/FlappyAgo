@@ -2,6 +2,7 @@ package com.flappyago.game.states;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.flappyago.game.FlappyAgo;
 import com.flappyago.game.music.GameMusic;
+import com.flappyago.game.scores.Scores;
 
 public class MenuState extends State {
     // background
@@ -120,7 +122,9 @@ public class MenuState extends State {
         drawableAi = new TextureRegionDrawable(new TextureRegion(aiTexture));
         aiButton = new ImageButton(drawableAi);
         aiButton.setPosition(camera.position.x - playButton.getWidth() / 2, camera.position.y - 80);
-        stage.addActor(aiButton);
+        if (Scores.getMaxScore() >= 10) {
+            stage.addActor(aiButton);
+        }
 
         // set info button
         infoTexture = new Texture("info_button.png");
@@ -203,13 +207,17 @@ public class MenuState extends State {
             GameMusic.getMenuMusic().play();
         }
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) && !displayInfo && !displayCredits) {
+            Gdx.app.exit();
+        }
+
         // INFO BUTTON
         if (infoButton.isPressed()) {
             if (!displayInfo) {
                 openInfo();
             }
         }
-        if (closeInfoButton.isPressed()) {
+        if (closeInfoButton.isPressed() || Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
             if (displayInfo) {
                 closeInfo();
             }
@@ -221,7 +229,7 @@ public class MenuState extends State {
                 openCredits();
             }
         }
-        if (closeCreditsButton.isPressed()) {
+        if (closeCreditsButton.isPressed() || Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
             if (displayCredits) {
                 closeCredits();
             }
@@ -240,8 +248,10 @@ public class MenuState extends State {
         stage.addActor(infoButton);
         stage.addActor(creditsButton);
         stage.addActor(playButton);
-        stage.addActor(aiButton);
         stage.addActor(soundButton);
+        if (Scores.getMaxScore() >= 10) {
+            stage.addActor(aiButton);
+        }
     }
 
     private void openInfo() {

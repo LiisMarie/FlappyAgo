@@ -74,11 +74,8 @@ public class PlayState extends State {
     private int nextTube;
     public static boolean aiOn;
 
-
-
     public PlayState(GameStateManager gameStateManager, boolean ai) {
         super(gameStateManager);
-
         gameOn = false;
         gameOver = false;
         aiOn = ai;
@@ -157,11 +154,20 @@ public class PlayState extends State {
 
     @Override
     protected void handleInput() {
+        if (!gameOn && Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
+            backToMenu = true;
+        }
+        if (gameOn && Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
+            gameOn = false;
+            gameOver = true;
+        }
         if ((Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) && !gameOver) {
             // if game hasn't started yet, it will start
             // if game has started already then ago jumps
             gameOn = true;
-            ago.jump();
+            if (!aiOn) {
+                ago.jump();
+            }
         } else if (newGame) {  // starts a new game
             gameStateManager.set(new PlayState(gameStateManager, aiOn));
         } else if (backToMenu) {  // goes back to the menu
@@ -295,13 +301,20 @@ public class PlayState extends State {
         // display current score and highscore
         font.getData().setScale(BOX_FONT);
         font.draw(sb, "Score " + score, camera.position.x - 90, camera.position.y + 50);
-        font.draw(sb, "Best " + Scores.getMaxScore(), camera.position.x - 90, camera.position.y + 10);
+        if (!aiOn) {
+            font.draw(sb, "Best " + Scores.getMaxScore(), camera.position.x - 90, camera.position.y + 10);
+        }
+        if (aiOn) {
+            font.draw(sb, "Ai Best " + Scores.getAiScore(), camera.position.x - 90, camera.position.y + 10);
+        }
+        if (Scores.getMaxScore() >= 10 && Scores.getPrevMax() < 10) {
+            font.draw(sb, "You unlocked", camera.position.x - 90, camera.position.y -80);
+            font.draw(sb, "AI mode!", camera.position.x - 90, camera.position.y -100);
+        }
         ago.newStart = true;
 
         // write over the score if new one is greater
-        if (!aiOn) {
-            Scores.updateMax(score);
-        }
+        Scores.updateMax(score, aiOn);
 
         sb.end();
 

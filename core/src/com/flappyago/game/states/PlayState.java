@@ -29,6 +29,7 @@ import java.util.List;
 
 public class PlayState extends State {
 
+
     // Ago
     private Ago ago;
     private static final int AGO_BEHIND_CENTER = 80;
@@ -59,7 +60,10 @@ public class PlayState extends State {
 
     private int score;
     private Scores scores;
+<<<<<<< HEAD
     private boolean hasScored;
+=======
+>>>>>>> 3e8074e254639e55c8115f59739f6f360b3b8dd4
 
     // text
     GlyphLayout layout;
@@ -72,17 +76,24 @@ public class PlayState extends State {
     private static final int SPACE_BETWEEN_TUBES = 125;  // space between tubes, not including tubes
     private static final int TUBE_COUNT = 4;
     private ArrayList<Tube> tubes;
+    private int nextTube;
+    public static boolean aiOn;
 
-
-    public PlayState(GameStateManager gameStateManager) {
+    public PlayState(GameStateManager gameStateManager, boolean ai) {
         super(gameStateManager);
+<<<<<<< HEAD
 
         score = 0;
         scores = new Scores();
         hasScored = false;
 
+=======
+>>>>>>> 3e8074e254639e55c8115f59739f6f360b3b8dd4
         gameOn = false;
         gameOver = false;
+        aiOn = ai;
+
+        scores = new Scores();
 
         ago = new Ago(AGO_STARTING_POSITION_X, AGO_STARTING_POSITION_Y);
 
@@ -99,11 +110,17 @@ public class PlayState extends State {
         groundPosition2 = new Vector2((camera.position.x - camera.viewportWidth / 2)
                 + ground.getWidth(), GROUND_Y_OFFSET);
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 3e8074e254639e55c8115f59739f6f360b3b8dd4
         // tubes
         tubes = new ArrayList<Tube>();
         for (int i = 1; i <= TUBE_COUNT; i++) {
             tubes.add(new Tube(i * (SPACE_BETWEEN_TUBES + Tube.TUBE_WIDTH)));
         }
+        nextTube = 0;
 
         // font
         font = new BitmapFont(Gdx.files.internal("flappybirdy2.fnt"));
@@ -117,6 +134,10 @@ public class PlayState extends State {
     private void createGameOverButtons() {
         // playbutton on gameover screen
         Texture playTexture = new Texture("play_button.png");
+        if (aiOn) {
+            playTexture.dispose();
+            playTexture = new Texture("ai_button.png");
+        }
         TextureRegionDrawable drawablePlay = new TextureRegionDrawable(new TextureRegion(playTexture));
         playButton = new ImageButton(drawablePlay);
         playButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -149,13 +170,22 @@ public class PlayState extends State {
 
     @Override
     protected void handleInput() {
+        if (!gameOn && Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
+            backToMenu = true;
+        }
+        if (gameOn && Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
+            gameOn = false;
+            gameOver = true;
+        }
         if ((Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) && !gameOver) {
             // if game hasn't started yet, it will start
             // if game has started already then ago jumps
             gameOn = true;
-            ago.jump();
+            if (!aiOn) {
+                ago.jump();
+            }
         } else if (newGame) {  // starts a new game
-            gameStateManager.set(new PlayState(gameStateManager));
+            gameStateManager.set(new PlayState(gameStateManager, aiOn));
         } else if (backToMenu) {  // goes back to the menu
             gameStateManager.set(new MenuState(gameStateManager));
         }
@@ -163,6 +193,10 @@ public class PlayState extends State {
 
     @Override
     public void update(float dt) {
+        if (aiOn && gameOn && ago.getPosition().y < tubes.get(nextTube).getPositionTopTube().y - SPACE_BETWEEN_TUBES + 35) {
+            ago.jump();
+            System.out.println("JUMP!!!");
+        }
         handleInput();
         if (gameOn) {
             updateGround();
@@ -183,7 +217,13 @@ public class PlayState extends State {
                     System.out.println("SCORE: " + score);
                 }
 
-                if (tube.collides(ago.getBounds())) {  // check collision with tubes
+                if ((ago.getPosition().x - tubes.get(nextTube).getPositionTopTube().x) > 60) {
+                    nextTube += 1;
+                    nextTube %= 4;
+                }
+
+
+                    if (tube.collides(ago.getBounds())) {  // check collision with tubes
                     GameMusic.playDying();
                     gameOver = true;
                     gameOn = false;
@@ -284,9 +324,27 @@ public class PlayState extends State {
         // display current score and highscore
         font.getData().setScale(BOX_FONT);
         font.draw(sb, "Score " + score, camera.position.x - 90, camera.position.y + 50);
+<<<<<<< HEAD
         font.draw(sb, "Best " + Scores.getMaxScore(), camera.position.x - 90, camera.position.y + 10);
         ago.newStart = true;
 
+=======
+        if (!aiOn) {
+            font.draw(sb, "Best " + Scores.getMaxScore(), camera.position.x - 90, camera.position.y + 10);
+        }
+        if (aiOn) {
+            font.draw(sb, "Ai Best " + Scores.getAiScore(), camera.position.x - 90, camera.position.y + 10);
+        }
+        if (Scores.getMaxScore() >= 10 && Scores.getPrevMax() < 10) {
+            font.draw(sb, "You unlocked", camera.position.x - 90, camera.position.y -80);
+            font.draw(sb, "AI mode!", camera.position.x - 90, camera.position.y -100);
+        }
+        ago.newStart = true;
+
+        // write over the score if new one is greater
+        Scores.updateMax(score, aiOn);
+
+>>>>>>> 3e8074e254639e55c8115f59739f6f360b3b8dd4
         sb.end();
 
         // add new game and back to menu buttons

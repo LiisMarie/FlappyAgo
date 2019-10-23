@@ -6,12 +6,17 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.flappyago.game.music.GameMusic;
+import com.flappyago.game.scores.Scores;
 import com.flappyago.game.states.GameStateManager;
 import com.flappyago.game.states.MenuState;
 
+import java.awt.DisplayMode;
+
 public class FlappyAgo extends ApplicationAdapter {
+
 	public static int maxScore;
 	private Preferences pref;
+	private Scores scores;
 
 	public static final int WIDTH = 480;
 	public static final int HEIGHT = 750;
@@ -24,6 +29,7 @@ public class FlappyAgo extends ApplicationAdapter {
 	@Override
 	public void create () {
 		GameMusic gameMusic = new GameMusic();
+		Gdx.input.setCatchBackKey(true);
 		maxScore = 0;
 		batch = new SpriteBatch();
 		gameStateManager = new GameStateManager();
@@ -33,8 +39,10 @@ public class FlappyAgo extends ApplicationAdapter {
 		if (!pref.contains("HighScore")) {
 			pref.putInteger("HighScore", 0);
 		}
-		maxScore = pref.getInteger("HighScore");
-
+		if (!pref.contains("AiScore")) {
+			pref.putInteger("AiScore", 0);
+		}
+		scores = new Scores();
 		gameStateManager.push(new MenuState(gameStateManager));
 	}
 

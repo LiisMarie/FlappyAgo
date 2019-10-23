@@ -1,6 +1,7 @@
 package com.flappyago.game.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.flappyago.game.FlappyAgo;
 import com.flappyago.game.music.GameMusic;
+import com.flappyago.game.scores.Scores;
 
 public class MenuState extends State {
     // background
@@ -25,6 +27,11 @@ public class MenuState extends State {
     private Texture playTexture;
     private Drawable drawablePlay;
     private ImageButton playButton;
+
+    // ai button
+    private Texture aiTexture;
+    private Drawable drawableAi;
+    private ImageButton aiButton;
 
     // sound button
     private Texture soundTexture;
@@ -109,6 +116,15 @@ public class MenuState extends State {
         playButton.setPosition(camera.position.x - playButton.getWidth() / 2, camera.position.y);
         stage.addActor(playButton);
 
+        // set ai button
+        aiTexture = new Texture("ai_button.png");
+        drawableAi = new TextureRegionDrawable(new TextureRegion(aiTexture));
+        aiButton = new ImageButton(drawableAi);
+        aiButton.setPosition(camera.position.x - playButton.getWidth() / 2, camera.position.y - 80);
+        if (Scores.getMaxScore() >= 10) {
+            stage.addActor(aiButton);
+        }
+
         // set info button
         infoTexture = new Texture("info_button.png");
         drawableInfo = new TextureRegionDrawable(new TextureRegion(infoTexture));
@@ -166,7 +182,12 @@ public class MenuState extends State {
         // when user has touched the screen (with mouse or finger)
         //PLAYBUTTON
         if (playButton.isPressed()) {
-            gameStateManager.set(new PlayState(gameStateManager));
+            gameStateManager.set(new PlayState(gameStateManager, false));
+        }
+
+        //AIBUTTON
+        if (aiButton.isPressed()) {
+            gameStateManager.set(new PlayState(gameStateManager, true));
         }
 
         // SOUNDBUTTON
@@ -185,13 +206,17 @@ public class MenuState extends State {
             GameMusic.getMenuMusic().play();
         }
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) && !displayInfo && !displayCredits) {
+            Gdx.app.exit();
+        }
+
         // INFO BUTTON
         if (infoButton.isPressed()) {
             if (!displayInfo) {
                 openInfo();
             }
         }
-        if (closeInfoButton.isPressed()) {
+        if (closeInfoButton.isPressed() || Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
             if (displayInfo) {
                 closeInfo();
             }
@@ -203,7 +228,7 @@ public class MenuState extends State {
                 openCredits();
             }
         }
-        if (closeCreditsButton.isPressed()) {
+        if (closeCreditsButton.isPressed() || Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
             if (displayCredits) {
                 closeCredits();
             }
@@ -214,6 +239,7 @@ public class MenuState extends State {
         infoButton.remove();
         creditsButton.remove();
         playButton.remove();
+        aiButton.remove();
         soundButton.remove();
     }
 
@@ -222,6 +248,9 @@ public class MenuState extends State {
         stage.addActor(creditsButton);
         stage.addActor(playButton);
         stage.addActor(soundButton);
+        if (Scores.getMaxScore() >= 10) {
+            stage.addActor(aiButton);
+        }
     }
 
     private void openInfo() {

@@ -52,10 +52,6 @@ public class FlappyAgo extends ApplicationAdapter {
 
 	@Override
 	public void dispose () {
-		if (maxScore > pref.getInteger("HighScore")) {
-			pref.putInteger("HighScore", maxScore);
-			pref.flush();
-		}
 		GameMusic.dispose();
 		super.dispose();
 	}
